@@ -1,0 +1,139 @@
+<div
+  class="col-12"
+  style="background-color: #ffffff; height: 64px; padding: 0 0 40px 0"
+>
+  <a class="sidebar-brand" href="/">
+    <img
+      src="/img/photos/logo.png"
+      alt=""
+      style="width: 50%; height: 50px; margin-top: -8px"
+    />
+  </a>
+</div>
+
+<ul class="sidebar-nav">
+  <li class="sidebar-header">Pages</li>
+
+  <% if(user?.level === "Super Admin") { %>
+  <li class="sidebar-item <%= path==='dashboard' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/">
+      <i class="align-middle" data-feather="sliders"></i>
+      <span class="align-middle">Dashboard</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='admins' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/admins">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Admins</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='users' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/all/users">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Users</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='companies' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/companies">
+      <i class="align-middle" data-feather="globe"></i>
+      <span class="align-middle">Companies</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='revision' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/revision">
+      <i class="align-middle" data-feather="settings"></i>
+      <span class="align-middle">Admin Actions</span>
+    </a>
+  </li>
+  <% } %> <% if(user?.level === "1") { %>
+  <li class="sidebar-item <%= path==='admins' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/comp-admins">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Admins</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='users' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/all/users">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Users</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='companies' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/admin/<%= user?.company %>/view">
+      <i class="align-middle" data-feather="globe"></i>
+      <span class="align-middle">Employees</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='groups' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/groups">
+      <i class="align-middle" data-feather="user"></i>
+      <span class="align-middle">Groups</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='revision' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/revision">
+      <i class="align-middle" data-feather="settings"></i>
+      <span class="align-middle">Admin Actions</span>
+    </a>
+  </li>
+  <% } %> <% if(user?.level === "2") { %>
+  <li class="sidebar-item <%= path==='companies' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/group-admin/view">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Employees</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='revision' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/revision">
+      <i class="align-middle" data-feather="settings"></i>
+      <span class="align-middle">Admin Actions</span>
+    </a>
+  </li>
+  <% } %> 
+
+  <% if((user?.level == "3") || (user?.level == "4") || (user?.level == "5")) { %>
+  <li class="sidebar-item <%= path==='companies' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/employees-aoa">
+      <i class="align-middle" data-feather="users"></i>
+      <span class="align-middle">Employees</span>
+    </a>
+  </li>
+  <% } %>
+
+  <% if(!(user?.level == "Super Admin")) { %>
+  <li class="sidebar-item <%= path==='org-chart' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/org-hierarchy-company">
+      <i class="align-middle" data-feather="user"></i>
+      <span class="align-middle">Org Hierarchy</span>
+    </a>
+  </li>
+
+  <li class="sidebar-header">My Details</li>
+
+  <li class="sidebar-item <%= path==='employee-details' ? 'active' : '' %>">
+    <a class="sidebar-link" href="/employee-details">
+      <i class="align-middle" data-feather="user"></i>
+      <span class="align-middle">Employee Details</span>
+    </a>
+  </li>
+
+  <li class="sidebar-item <%= path==='goals-worksheet' ? 'active' : '' %>">
+    <a
+      class="sidebar-link"
+      href="/goals-worksheet-single/view/<%= user?.goalsWorksheet ? user?.goalsWorksheet : 'undefined' %>?comp=<%= user?.company %>&nm=<%= user?.name %>&em=<%= user?.email %>&view=self"
+    >
+      <i class="align-middle" data-feather="user"></i>
+      <span class="align-middle">Goals Worksheet</span>
+    </a>
+  </li>
+  <% } %>
+</ul>

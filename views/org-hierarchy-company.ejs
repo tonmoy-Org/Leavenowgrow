@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Org Hierarchy</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Admin Kit CSS File  -->
+    <link href="css/app.css" rel="stylesheet" />
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    .rounded-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .border {
+      border: 2px solid #f00; /* 2px solid red border */
+    }
+    .spinner-loader {
+      border: 4px solid #1e5c99;
+      border-radius: 50%;
+      border-top: 4px solid transparent;
+      width: 16px;
+      height: 16px;
+      -webkit-animation: spin 1s linear infinite; /* Safari */
+      animation: spin 1s linear infinite;
+    }
+
+    .downloadOptions ul li {
+      cursor: pointer;
+    }
+
+    .downloadOptions ul li:hover {
+      color: #dc3545;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "dashboard" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div
+              class="position-relative d-flex align-items-center justify-content-between p-2"
+            >
+              <h3 class="fs-3 fw-semibold mb-3">Organizational Hierarchy</h3>
+              <button
+                class="btn btn-secondary btn-lg rounded-button"
+                id="downloadButton"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Download"
+              >
+                <i class="align-middle" data-feather="download"></i>
+              </button>
+              <div
+                class="downloadOptions"
+                id="downloadOptions"
+                style="
+                  z-index: 10;
+                  position: absolute;
+                  top: 48px;
+                  right: 10px;
+                  width: 100px;
+                  display: none;
+                  background-color: #495057;
+                  color: #ffffff;
+                  border: 1px solid gray;
+                "
+              >
+                <ul style="list-style-type: none; padding: 8px">
+                  <li
+                    style="padding: 4px; font-weight: 700"
+                    onclick="downloadFile('DOCX')"
+                  >
+                    DOCX
+                  </li>
+                  <li
+                    style="padding: 4px; font-weight: 700"
+                    onclick="downloadFile('EXCEL')"
+                  >
+                    EXCEL
+                  </li>
+                  <li
+                    style="padding: 4px; font-weight: 700"
+                    onclick="downloadFile('PDF')"
+                  >
+                    PDF
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- org chart  -->
+            <div class="row m-0">
+              <div class="card">
+                <!-- <div class="card-header">Organizational Hierarchy</div> -->
+                <div class="card-body">
+                  <h1>Company</h1>
+                  <div class="p-4 border">
+                    <div>
+                      <p id="company-name" class="text-center h3">
+                        Choose A Company
+                      </p>
+                    </div>
+                    <div
+                      class="p-3 d-flex align-items-center justify-content-evenly flex-wrap gap-2"
+                    >
+                      <button
+                        title="Expand All"
+                        onclick="chart.expandAll().fit()"
+                        class="btn btn-primary rounded-button"
+                      >
+                        <i class="fas fa-angle-double-down"></i>
+                      </button>
+                      <button
+                        title="Collapse All"
+                        onclick="chart.collapseAll().fit()"
+                        class="btn btn-secondary rounded-button"
+                      >
+                        <i class="fas fa-angle-double-up"></i>
+                      </button>
+
+                      <button
+                        title="Fit to Screen"
+                        onclick="chart.fit()"
+                        class="btn btn-info rounded-button"
+                      >
+                        <i class="fas fa-compress"></i>
+                      </button>
+
+                      <button
+                        title="Top Layout"
+                        onclick="chart.layout('top').render().fit()"
+                        class="btn btn-warning rounded-button"
+                      >
+                        T
+                      </button>
+                      <button
+                        title="Left Layout"
+                        onclick="chart.layout('left').render().fit()"
+                        class="btn btn-success rounded-button"
+                      >
+                        L
+                      </button>
+                      <button
+                        title="Horizontal Layout"
+                        onclick="chart.compact(false).render().fit()"
+                        class="btn btn-dark rounded-button"
+                      >
+                        H
+                      </button>
+                      <button
+                        title="Vertical Layout"
+                        onclick="chart.compact(true).render().fit()"
+                        class="btn btn-light rounded-button"
+                      >
+                        V
+                      </button>
+                      <button
+                        title="Download PDF"
+                        onclick="downloadPdf(chart)"
+                        class="btn btn-secondary rounded-button"
+                      >
+                        <i class="align-middle" data-feather="download"></i>
+                      </button>
+                    </div>
+                    <div class="chart-container"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
+    <!-- Admin Kit JS File  -->
+
+    <script src="https://unpkg.com/html2canvas@1.1.4/dist/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script>
+      function downloadPdf(chart) {
+        chart.expandAll().exportImg({
+          save: false,
+          full: true,
+          onLoad: (base64) => {
+            var pdf = new jspdf.jsPDF();
+            var img = new Image();
+            img.src = base64;
+            img.onload = function () {
+              pdf.addImage(
+                img,
+                "JPEG",
+                5,
+                5,
+                595 / 3,
+                ((img.height / img.width) * 595) / 3
+              );
+              pdf.save("chart.pdf");
+            };
+          },
+        });
+      }
+    </script>
+
+    <script>
+      let orgData;
+      let chart;
+      const company = "<%= user?.company %>";
+
+      document.addEventListener("DOMContentLoaded", (event) => {
+        fetch(`/v3/get/companies/${company}`)
+          .then((res) => res.json())
+          .then((resData) => {
+            orgData = resData?.data;
+            console.log(orgData);
+            renderOrgChart(orgData);
+          });
+      });
+
+      function getCompaniesOrgChart(event) {
+        const companyId = event.target.value;
+
+        fetch(`/v3/get/companies/${companyId}`)
+          .then((res) => res.json())
+          .then((resData) => {
+            orgData = resData?.data;
+            console.log(orgData);
+            renderOrgChart(orgData);
+          });
+      }
+
+      function renderOrgChart(data) {
+        const companyName = data[0].data.companyOrGroup;
+        console.log(companyName);
+        const pElem = document.getElementById("company-name");
+        pElem.innerHTML = companyName;
+
+        chart = new d3.OrgChart()
+          .compact(false)
+          .nodeId((dataItem) => dataItem.id)
+          .parentNodeId((dataItem) => dataItem.pid)
+          .nodeWidth((node) => 400)
+          .nodeHeight((node) => 150)
+          .linkUpdate(function (d, i, arr) {
+            d3.select(this).attr("stroke", "#404040").attr("stroke-width", 2);
+          })
+          .nodeContent((node) => {
+            const content = node.data.data;
+
+            return `<div style='background-color: #dedede;padding: 16px;width: ${
+              node.width
+            };height: ${node.height};border-radius: 8px;'>
+          <div style='display: flex;gap: 10px;justify-content: center;align-items: flex-start;'>
+            <img style='width: 120px;height: 120px;border-radius: 25%;' src='${
+              content?.profilePic
+                ? content?.profilePic
+                : "/img/avatars/user-dummy.avif"
+            }' alt='' />
+          <div style="width: 100%;font-weight: bold; font-family: Poppins; font-size: 16px">
+            <p style="width: 100%; margin-bottom: 4px;padding: 2px 6px;background-color: #1E5C99;color: #fff;text-align: center">${
+              content?.name
+            }</p>
+            <div title="${content?.jobTitle}">
+              <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 238px; margin-bottom: 4px;padding: 2px 6px;background-color: #CECECE;color: #222;text-align: center">${
+                content?.jobTitle ? content?.jobTitle : "N/A"
+              }</p>  
+            </div>
+            <input type="checkbox" class="header-checkbox" data-column=${
+              content?.formDataId
+            } style="float: right" />
+            <div class="d-flex align-items-center justify-content-evenly gap-2">
+              ${`<a title="View AOA" href='/aoa-details/${content?.formDataId}?comp=${content?.companyId}' target='_blank' class="btn btn-primary rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye align-middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+              <a title="View Goals Worksheet" href='/goals-worksheet-single/view/${content?.goalsWorksheetId}?comp=${content?.companyId}' target='_blank' class="btn btn-success rounded-button">
+                <svg width="14" height="14" fill="#ffffff" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M336 64h-80c0-35.3-28.7-64-64-64s-64 28.7-64 64H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM96 424c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm0-96c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24zm96-192c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm128 368c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-96c0 4.4-3.6 8-8 8H168c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"/></svg>
+              </a>
+              <a title="Edit AOA" href='/edit-form/${content?.formDataId}?comp=${content?.companyId}' target='_blank' class="btn btn-info rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit align-middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></a>
+              <a title="View Evaluations" href='/all-evaluations/${content?.formDataId}?comp=${content?.companyId}' target='_blank' class="btn btn-warning rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text align-middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></a>`}
+            </div>
+          </div>
+            </div>
+         </div>`;
+          })
+          .initialZoom(0.9)
+          .container(".chart-container")
+          .data(data)
+          .render();
+      }
+    </script>
+
+    <script>
+      document
+        .getElementById("downloadButton")
+        .addEventListener("click", function () {
+          const optionElement = document.getElementById("downloadOptions");
+          optionElement.style.display === "none"
+            ? (optionElement.style.display = "block")
+            : (optionElement.style.display = "none");
+        });
+    </script>
+    <script>
+      function downloadFile(option) {
+        // Gather checked values of header checkboxes
+        const headerCheckboxes = document.querySelectorAll(
+          ".header-checkbox:checked"
+        );
+        const headerValues = Array.from(headerCheckboxes).map(
+          (checkbox) => checkbox.dataset.column
+        );
+        if (headerValues.length === 0) {
+          alert("Please, check at least one employee.");
+        } else {
+          switch (option) {
+            case "DOCX":
+              window.location.href = `/admin/downloadDOCX/${headerValues}`;
+              break;
+            case "EXCEL":
+              window.location.href = `/admin/downloadEXCEL/${headerValues}`;
+              break;
+            case "PDF":
+              window.location.href = `/admin/downloadPDF/${headerValues}`;
+              break;
+            default:
+              alert("Please, select a file type.");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

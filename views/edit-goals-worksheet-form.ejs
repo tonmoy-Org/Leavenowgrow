@@ -1,0 +1,572 @@
+<%- include('partials/html-head', { siteTitle: "Goals Worksheet" }); %>
+<body style="font-family: 'Poppins', sans-serif">
+  <!-- main content start -->
+  <div class="wrapper">
+    <div class="main">
+      <main class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <div class="d-flex align-items-start gap-4">
+                    <div>
+                      <span>
+                        <a
+                          href="/goals-worksheet/view/<%= goalsWorksheet?.company?._id %>"
+                          title="<%= goalsWorksheet?.company?.name %>"
+                        >
+                          <i class="align-middle" data-feather="globe"></i>
+                        </a>
+                      </span>
+                    </div>
+                    <div>
+                      <h2 class="card-title">Goals Worksheet</h2>
+                      <h2 class="card-title">
+                        Company: <%= goalsWorksheet?.company?.name %>
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <form
+                    action="/update-goals-worksheet"
+                    method="post"
+                    class="needs-validation"
+                    novalidate
+                  >
+                    <input
+                      type="hidden"
+                      name="id"
+                      value="<%= goalsWorksheet?._id %>"
+                    />
+                    <input
+                      type="hidden"
+                      name="group"
+                      value="<%= goalsWorksheet?.group ? group : '' %>"
+                    />
+                    <input
+                      type="hidden"
+                      name="company"
+                      value="<%= goalsWorksheet?.company?._id %>"
+                    />
+
+                    <input
+                      type="hidden"
+                      name="name"
+                      value="<%= goalsWorksheet?.name %>"
+                    />
+                    <p>Editing goals for <%= goalsWorksheet?.name %></p>
+                    <div class="mb-3">
+                      <select
+                        class="form-select mb-3"
+                        id="quarter"
+                        name="quarter"
+                        required
+                      >
+                        <option value="Q1">Q1 (January - March)</option>
+                        <option value="Q2">Q2 (April - June)</option>
+                        <option value="Q3">Q3 (July - September)</option>
+                        <option value="Q4">Q4 (October - December)</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Please select a valid quarter.
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="year" class="form-label">Term Period</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="year"
+                        name="year"
+                        aria-describedby="yearHelp"
+                        pattern="(?:(?:18|19|20|21)[0-9]{2})"
+                        value="<%= goalsWorksheet?.year %>"
+                        required
+                      />
+                      <div class="valid-feedback">Looks good!</div>
+                      <div class="invalid-feedback">
+                        Please enter a valid year.
+                      </div>
+                    </div>
+                    <div class="accordion" id="accordionExample">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button
+                            class="accordion-button"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="true"
+                            aria-controls="collapseOne"
+                          >
+                            Goal #1
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseOne"
+                          class="accordion-collapse collapse show"
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div class="accordion-body">
+                            <div id="goals1">
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea1"
+                                  class="form-label"
+                                  >Goal</label
+                                >
+                                <textarea
+                                  name="worksheets.0.goal"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[0]?.goal ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A key initiative or outcome you want to
+                                  achieve over time. Often requires multiple
+                                  steps or phases.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea2"
+                                  class="form-label"
+                                  >Benefit</label
+                                >
+                                <textarea
+                                  name="worksheets.0.benefit"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea2"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[0]?.benefit ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  The value or advantage this goal will bring to
+                                  you, your team, or the organization if
+                                  it&apos;s achieved.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea3"
+                                  class="form-label"
+                                  >Metric</label
+                                >
+                                <textarea
+                                  name="worksheets.0.metric"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea3"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[0]?.metric ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A specific, trackable way to know if
+                                  you&apos;re making progress and/or have
+                                  reached the goal.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea4"
+                                  class="form-label"
+                                  >Action</label
+                                >
+                                <textarea
+                                  name="worksheets.0.action"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea4"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[0]?.action ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  Initial steps or activities that will move the
+                                  goal forward and build momentum, include a
+                                  timeframe for completion. You may choose to
+                                  add other actions later.
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button
+                            class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                          >
+                            Goal #2
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseTwo"
+                          class="accordion-collapse collapse"
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div class="accordion-body">
+                            <div id="goals2">
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea1"
+                                  class="form-label"
+                                  >Goal</label
+                                >
+                                <textarea
+                                  name="worksheets.1.goal"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[1]?.goal ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A key initiative or outcome you want to
+                                  achieve over time. Often requires multiple
+                                  steps or phases.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea2"
+                                  class="form-label"
+                                  >Benefit</label
+                                >
+                                <textarea
+                                  name="worksheets.1.benefit"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea2"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[1]?.benefit ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  The value or advantage this goal will bring to
+                                  you, your team, or the organization if
+                                  it&apos;s achieved.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea3"
+                                  class="form-label"
+                                  >Metric</label
+                                >
+                                <textarea
+                                  name="worksheets.1.metric"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea3"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[1]?.metric ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A specific, trackable way to know if
+                                  you&apos;re making progress and/or have
+                                  reached the goal.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea4"
+                                  class="form-label"
+                                  >Action</label
+                                >
+                                <textarea
+                                  name="worksheets.1.action"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea4"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[1]?.action ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  Initial steps or activities that will move the
+                                  goal forward and build momentum, include a
+                                  timeframe for completion. You may choose to
+                                  add other actions later.
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button
+                            class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree"
+                          >
+                            Goal #3
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseThree"
+                          class="accordion-collapse collapse"
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div class="accordion-body">
+                            <div id="goals3">
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea1"
+                                  class="form-label"
+                                  >Goal</label
+                                >
+                                <textarea
+                                  name="worksheets.2.goal"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[2]?.goal ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A key initiative or outcome you want to
+                                  achieve over time. Often requires multiple
+                                  steps or phases.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea2"
+                                  class="form-label"
+                                  >Benefit</label
+                                >
+                                <textarea
+                                  name="worksheets.2.benefit"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea2"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[2]?.benefit ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  The value or advantage this goal will bring to
+                                  you, your team, or the organization if
+                                  it&apos;s achieved.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea3"
+                                  class="form-label"
+                                  >Metric</label
+                                >
+                                <textarea
+                                  name="worksheets.2.metric"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea3"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[2]?.metric ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A specific, trackable way to know if
+                                  you&apos;re making progress and/or have
+                                  reached the goal.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea4"
+                                  class="form-label"
+                                  >Action</label
+                                >
+                                <textarea
+                                  name="worksheets.2.action"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea4"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[2]?.action ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  Initial steps or activities that will move the
+                                  goal forward and build momentum, include a
+                                  timeframe for completion. You may choose to
+                                  add other actions later.
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button
+                            class="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseFour"
+                            aria-expanded="false"
+                            aria-controls="collapseFour"
+                          >
+                            Goal #4
+                          </button>
+                        </h2>
+                        <div
+                          id="collapseFour"
+                          class="accordion-collapse collapse"
+                          data-bs-parent="#accordionExample"
+                        >
+                          <div class="accordion-body">
+                            <div id="goals4">
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea1"
+                                  class="form-label"
+                                  >Goal</label
+                                >
+                                <textarea
+                                  name="worksheets.3.goal"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea1"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[3]?.goal ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A key initiative or outcome you want to
+                                  achieve over time. Often requires multiple
+                                  steps or phases.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea2"
+                                  class="form-label"
+                                  >Benefit</label
+                                >
+                                <textarea
+                                  name="worksheets.3.benefit"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea2"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[3]?.benefit ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  The value or advantage this goal will bring to
+                                  you, your team, or the organization if
+                                  it&apos;s achieved.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea3"
+                                  class="form-label"
+                                  >Metric</label
+                                >
+                                <textarea
+                                  name="worksheets.3.metric"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea3"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[3]?.metric ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  A specific, trackable way to know if
+                                  you&apos;re making progress and/or have
+                                  reached the goal.
+                                </small>
+                              </div>
+                              <div class="mb-3">
+                                <label
+                                  for="exampleFormControlTextarea4"
+                                  class="form-label"
+                                  >Action</label
+                                >
+                                <textarea
+                                  name="worksheets.3.action"
+                                  class="form-control"
+                                  id="exampleFormControlTextarea4"
+                                  rows="3"
+                                >
+<%= goalsWorksheet?.worksheets[3]?.action ?? "" %></textarea
+                                >
+                                <small class="form-text text-muted">
+                                  Initial steps or activities that will move the
+                                  goal forward and build momentum, include a
+                                  timeframe for completion. You may choose to
+                                  add other actions later.
+                                </small>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      id="formSubmit"
+                      class="btn btn-primary btn-block my-4"
+                      style="float: right"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer class="footer"><%- include('partials/footer'); %></footer>
+    </div>
+  </div>
+  <!-- main content end -->
+  <%- include('partials/html-scripts'); %>
+  <script>
+    function selectedQuarterOption(quarter) {
+      const quarterSelect = document.getElementById("quarter");
+      const options = quarterSelect.options;
+      for (let i = 0; i < options.length; i++) {
+        if (options[i].value === quarter) {
+          options[i].selected = true;
+          break;
+        }
+      }
+    }
+
+    selectedQuarterOption("<%= goalsWorksheet?.quarter %>"); // Call the function with the quarter value
+
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    // (() => {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    // const forms = document.querySelectorAll(".needs-validation");
+
+    // Loop over them and prevent submission
+    //   Array.from(forms).forEach((form) => {
+    //     form.addEventListener(
+    //       "submit",
+    //       (event) => {
+    //         if (!form.checkValidity()) {
+    //           event.preventDefault();
+    //           event.stopPropagation();
+    //         }
+
+    //         form.classList.add("was-validated");
+    //       },
+    //       false
+    //     );
+    //   });
+    // })();
+  </script>
+</body>

@@ -1,0 +1,29 @@
+<%- include('partials/html-head', { siteTitle: "500 Internal Server Error" });
+%>
+<body class="w-100 vh-100">
+  <div
+    class="w-100 d-flex align-items-center justify-content-center"
+    style="height: calc(100vh - 120px)"
+  >
+    <div
+      class="d-flex align-items-center justify-content-center flex-column gap-2"
+    >
+      <div>
+        <i
+          class="text-danger fs-1"
+          style="width: 48px; height: 48px"
+          data-feather="frown"
+        ></i>
+      </div>
+      <p class="fs-2">500 Internal Server Error</p>
+      <% if (content) { %>
+      <p class="fs-3"><%= content %></p>
+      <% } else { %>
+      <p class="fs-3">Something Went Wrong While Processing Your Request.</p>
+      <% }%>
+      <a href="/" class="link-opacity-100">Go Back Home</a>
+    </div>
+  </div>
+  <footer class="footer"><%- include('partials/footer'); %></footer>
+  <%- include('partials/html-scripts'); %>
+</body>

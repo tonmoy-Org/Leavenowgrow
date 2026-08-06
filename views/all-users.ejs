@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Admins</title>
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .rounded-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      .company-admin-link:link {
+        color: red;
+      }
+
+      /* mouse over link */
+      .company-admin-link:hover {
+        color: hotpink;
+      }
+
+      /* selected link */
+      .company-admin-link:active {
+        color: blue;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "users" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <!-- Message modal  -->
+            <div
+              class="modal fade"
+              id="errorModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabelError"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabelError">
+                      Message
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="error"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main content  -->
+            <div class="row py-2">
+              <div class="col-md-4 col-xs-12 col-sm-12">
+                <h1 class="h3 mb-3">Users</h1>
+              </div>
+              <div
+                class="col-md-8 col-xs-12 col-sm-12 text-md-end text-sm-start"
+              >
+                <% if(user.role == 1) { %>
+                <button
+                  type="button"
+                  class="btn btn-warning rounded-button float-end"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-modal"
+                  title="Add Super Admin or Regular Admin"
+                >
+                  <i class="align-middle" data-feather="plus"></i>
+                </button>
+                <% } %> <% if(user?.level == "1") { %>
+                <button
+                  type="button"
+                  class="btn btn-warning rounded-button float-end"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-group-admin-modal"
+                  title="Add Group Admin"
+                >
+                  <i class="align-middle" data-feather="plus"></i>
+                </button>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                <div class="card flex-fill rounded-3">
+                  <div class="card-header"></div>
+                  <div
+                    class="table-responsive"
+                    style="max-height: 900px; max-width: 100%; overflow: auto"
+                  >
+                    <table class="table table-hover my-0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Role</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% users.forEach((data, index) => { %>
+
+                        <tr>
+                          <td
+                            class="cursor_pointer"
+                            onclick="toggleSubgroups('<%= data._id %>')"
+                          >
+                            <%= index + 1 %>
+                          </td>
+                          <td
+                            class="cursor_pointer"
+                            onclick="toggleSubgroups('<%= data._id %>')"
+                          >
+                            <%= data.name %>
+                          </td>
+                          <td class=""><%= data.email %></td>
+                          <td class="">
+                            <% if(data?.level == "Super Admin") { %> Super Admin
+                            <% } else { %> Level <%= data?.level %> <% } %>
+                          </td>
+                          <td class="">
+                            <div class="d-flex align-items-center gap-2">
+                              <button
+                                type="button"
+                                class="btn btn-primary rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#edit-modal<%= data._id %>"
+                                title="Edit User Data"
+                              >
+                                <i class="align-middle" data-feather="edit"></i>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-danger rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal<%= data._id %>"
+                                title="Delete User"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="trash"
+                                ></i>
+                              </button>
+
+                              <% if(user?.level == "Super Admin") { %>
+                              <button
+                                type="button"
+                                class="btn btn-secondary rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#add-group-modal<%= data._id %>"
+                                title="Add Group Admin Under <%= data.name %>"
+                              >
+                                <i class="align-middle" data-feather="plus"></i>
+                              </button>
+                              <% } %>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <!-- Add group admin Modal -->
+                        <div
+                          class="modal fade"
+                          id="add-group-modal<%= data._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Add New Group Admin Under <%= data.name %>
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                  id="add-group-admin-close-btn"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form
+                                  id="add-group-admin-form"
+                                  action="/add-group-admin/<%= data._id %>"
+                                  method="POST"
+                                >
+                                  <input
+                                    type="hidden"
+                                    name="parentAdminId"
+                                    value="<%= data?._id%>"
+                                  />
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      name="name"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Email</label
+                                    >
+                                    <input
+                                      type="email"
+                                      class="form-control"
+                                      name="email"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Password</label
+                                    >
+                                    <input
+                                      type="password"
+                                      class="form-control"
+                                      name="password"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div
+                          class="modal fade"
+                          id="edit-modal<%= data._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Edit User
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/edit-admin" method="POST">
+                                  <input
+                                    type="hidden"
+                                    value="<%= data._id %>"
+                                    name="adminId"
+                                  />
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      value="<%= data.name %>"
+                                      name="name"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Email</label
+                                    >
+                                    <input
+                                      type="email"
+                                      class="form-control"
+                                      value="<%= data.email %>"
+                                      name="email"
+                                      disabled
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for="<%= data?._id %>-<%= data?.level %>"
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Permission level</label
+                                    >
+                                    <select
+                                      name="level"
+                                      id="<%= data?._id %>-<%= data?.level %>"
+                                      class="select-level form-select"
+                                    >
+                                      <option value="" class="disabled">
+                                        Choose Permission Level
+                                      </option>
+                                      <% if(user?.level == "Super Admin") { %>
+                                        <option value="Super Admin">
+                                          Super Admin
+                                        </option>
+                                      <% } %>
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                      <option value="4">4</option>
+                                      <option value="5">5</option>
+                                      <option value="6">6</option>
+                                    </select>
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Confirm delete modal-->
+                        <div
+                          class="modal fade"
+                          id="confirmDeleteModal<%= data._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Confirm Delete
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <h6>
+                                  Are you sure you want to delete <%= data.name
+                                  %>
+                                </h6>
+                              </div>
+                              <div class="modal-footer">
+                                <a
+                                  href="/admin/delete/<%= data._id %>"
+                                  type="submit"
+                                  class="btn btn-danger"
+                                  >Delete changes</a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% }) %>
+
+                        <!-- Add Modal -->
+                        <div
+                          class="modal fade"
+                          id="add-modal"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Add Super Admin or Regular Admin
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                  id="add-admin-close-btn"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form id="add-admin-form">
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      name="name"
+                                      required
+                                    />
+                                  </div>
+                                  <% if(user?.level === "Super Admin") { %>
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Super User</label
+                                    >
+                                    <select
+                                      class="form-control"
+                                      name="isSuperUser"
+                                      required
+                                    >
+                                      <option value="false">false</option>
+                                      <option value="true">true</option>
+                                    </select>
+                                  </div>
+                                  <% } %>
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Email</label
+                                    >
+                                    <input
+                                      type="email"
+                                      class="form-control"
+                                      name="email"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Password</label
+                                    >
+                                    <input
+                                      type="password"
+                                      class="form-control"
+                                      name="password"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Add group admin Modal -->
+                        <div
+                          class="modal fade"
+                          id="add-group-admin-modal"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Add Group Admin
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                  id="add-group-admin-close-btn-level-1"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form
+                                  id="add-group-admin-form-level-1"
+                                >
+                                  <input type="hidden" name="parentAdminId" value="<%= user?._id %>" />
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      name="name"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Email</label
+                                    >
+                                    <input
+                                      type="email"
+                                      class="form-control"
+                                      name="email"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Password</label
+                                    >
+                                    <input
+                                      type="password"
+                                      class="form-control"
+                                      name="password"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+      const elemLevel = document.querySelectorAll(".select-level");
+
+      elemLevel.forEach((elem) => {
+        const level = elem.id.split("-")[1];
+
+        for (let i = 0; i < elem.options.length; i++) {
+          if (elem.options[i].value === level) {
+            const selected = elem.options[i].value === level ? "selected" : "";
+            elem.options[i].setAttribute("selected", selected);
+          }
+        }
+      });
+    </script>
+    <script>
+      function toggleSubgroups(companyId) {
+        const subgroupsRow = document.getElementById(`subgroups${companyId}`);
+        if (subgroupsRow.style.display === "none") {
+          subgroupsRow.style.display = "table-row";
+        } else {
+          subgroupsRow.style.display = "none";
+        }
+      }
+    </script>
+
+    <script>
+      async function addDataApi(api, adminData) {
+        const res = await fetch(api, {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(adminData),
+        });
+
+        if (!res?.ok) {
+          return "Something went wrong.";
+        }
+        const data = await res.json();
+        return data?.message;
+      }
+
+      function showConfirmModal(message) {
+        const closeBtnAdmin = document.getElementById("add-admin-close-btn");
+        const closeBtnGroupAdmin = document.getElementById(
+          "add-group-admin-close-btn"
+        );
+        const closeBtnGroupAdminLevel1 = document.getElementById(
+          "add-group-admin-close-btn-level-1"
+        );
+
+        closeBtnAdmin.click();
+        closeBtnGroupAdmin.click();
+        closeBtnGroupAdminLevel1.click();
+
+        const errorElement = document.querySelector(".error");
+        errorElement.innerText = message;
+        const modal = document.getElementById("errorModal");
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
+      }
+
+      document
+        .getElementById("add-admin-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const form = event.target;
+
+          const adminData = {
+            name: form.name.value,
+            isSuperUser: form.isSuperUser.value,
+            email: form.email.value,
+            password: form.password.value,
+          };
+          const message = await addDataApi("/add-admin", adminData);
+
+          showConfirmModal(message);
+        });
+
+      document
+        .getElementById("add-group-admin-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const form = event.target;
+          const id = form.parentAdminId.value;
+
+          const adminData = {
+            name: form.name.value,
+            email: form.email.value,
+            password: form.password.value,
+          };
+          const message = await addDataApi(`/add-group-admin/${id}`, adminData);
+
+          showConfirmModal(message);
+        });
+
+      document
+        .getElementById("add-group-admin-form-level-1")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const form = event.target;
+          const id = form.parentAdminId.value;
+
+          const adminData = {
+            name: form.name.value,
+            email: form.email.value,
+            password: form.password.value,
+          };
+          const message = await addDataApi(`/add-group-admin/${id}`, adminData);
+
+          showConfirmModal(message);
+        });
+    </script>
+  </body>
+</html>

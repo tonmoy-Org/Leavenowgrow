@@ -1,0 +1,28 @@
+<%- include('partials/html-head', { siteTitle: "404 Not found" }); %>
+<body class="w-100 vh-100">
+  <div
+    class="w-100 d-flex align-items-center justify-content-center"
+    style="height: calc(100vh - 120px)"
+  >
+    <div
+      class="d-flex align-items-center justify-content-center flex-column gap-2"
+    >
+      <div>
+        <i
+          class="text-danger fs-1"
+          style="width: 48px; height: 48px"
+          data-feather="frown"
+        ></i>
+      </div>
+      <p class="fs-2">404 NOT FOUND</p>
+      <% if (content) { %>
+      <p class="fs-3"><%= content %></p>
+      <% } else { %>
+      <p class="fs-3">Your requsted path does not exist.</p>
+      <% }%>
+      <a href="/" class="link-opacity-100">Go Back Home</a>
+    </div>
+  </div>
+  <footer class="footer"><%- include('partials/footer'); %></footer>
+  <%- include('partials/html-scripts'); %>
+</body>

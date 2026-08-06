@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Goals Worksheets</title>
+
+    <link href="/css/app.css" rel="stylesheet" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .rounded-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      .check-all {
+        display: flex;
+        left: 0;
+        justify-content: flex-end;
+        top: 0;
+        height: 2rem;
+        width: 100%;
+        align-items: flex-start;
+      }
+
+      .check-all > label {
+        font-size: 0.6rem;
+        margin-left: 0.3rem;
+      }
+
+      .downloadOptions ul li {
+        cursor: pointer;
+      }
+
+      .downloadOptions ul li:hover {
+        color: #dc3545;
+      }
+
+      .table-responsive {
+        height: calc(100vh - 200px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "companies" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content" style="margin-top: 1px; padding-top: 10px">
+          <div class="container-fluid p-0">
+            <div class="dropdown">
+              <a
+                class="btn btn-secondary dropdown-toggle"
+                href="#"
+                role="button"
+                id="dropdownMenuLink"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Employees View
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <% if(comp) { %>
+                  <li><a class="dropdown-item" href="/admin/<%= company %>/view">AOAs</a></li>
+                  <li><a class="dropdown-item" href="/goals-worksheet/company/view/<%= company %>">Goals Worksheets</a></li>
+                <% } else { %>
+                  <li><a class="dropdown-item" href="/group-admin/view/<%= company %>">AOAs</a></li>
+                  <li><a class="dropdown-item" href="/goals-worksheet/group/view/<%= company %>">Goals Worksheets</a></li>
+                <% } %>
+              </ul>
+            </div>
+            <div class="row py-2">
+              <div class="col-6">
+                <h1 class="h3 mb-3">Goals Worksheets</h1>
+              </div>
+              <div class="col-6" style="position: relative">
+                <div class="float-end d-flex align-items-center gap-2">
+                  <% if(user) { %> <% if((user.role == 2 || user.role == 1) &&
+                  comp) { %>
+                  <a
+                    href="/goals-worksheet/<%= company %>"
+                    target="_blank"
+                    class="btn btn-dark btn-lg rounded-button"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="New Goals Worksheet"
+                    role="button"
+                  >
+                    <i class="align-middle" data-feather="link-2"></i>
+                  </a>
+                  <% } %> <% if(!comp) { %>
+                  <a
+                    href="/group-goals-worksheet/<%= company %>"
+                    target="_blank"
+                    class="btn btn-primary btn-lg rounded-button"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="New Goals Worksheet"
+                    role="button"
+                    ><i class="align-middle" data-feather="link-2"></i
+                  ></a>
+                  <% } %> <% } %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                <div class="card flex-fill">
+                  <div style="text-align: center; padding: 20px">
+                    <h3 style="font-weight: bold; line-height: 13px">
+                      <span style="font-size: 10px">Goals Worksheet</span
+                      ><br /><span style="font-size: 14px">
+                        <%= goalsWorksheets.companyName %>
+                      </span>
+                    </h3>
+                  </div>
+                  <% if(goalsWorksheets?.length==0) { %>
+                  <div
+                    class="col-md-4 text-center"
+                    style="
+                      margin: auto;
+                      background-color: #cfe2ff;
+                      border-radius: 5px;
+                      padding: 15px 0 0 0;
+                    "
+                  >
+                    <p>No Worksheets Found.</p>
+                  </div>
+                  <br />
+
+                  <% } else { %>
+
+                  <div class="table-responsive">
+                    <table
+                      id="sortableTable"
+                      class="table table-hover"
+                      style="table-layout: fixed"
+                    >
+                      <thead style="display: table-header-group">
+                        <tr>
+                          <th style="width: 50px">#</th>
+                          <th>Name</th>
+                          <th>Time Period</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% goalsWorksheets?.forEach(function(item, index) { %>
+                        <tr>
+                          <td><%= index + 1 %></td>
+                          <td><%= item?.name %></td>
+                          <td><%= item?.quarter %>, <%= item?.year %></td>
+
+                          <td
+                            class="d-flex align-items-center justify-content-start gap-2"
+                          >
+                            <div class="dropdown">
+                              <button
+                                id="downloadSingle<%= index+1 %>"
+                                class="dropdown-toggle btn btn-secondary rounded-button"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                title="Download"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="download"
+                                ></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-dark">
+                                <li
+                                  onclick="downloadSingleEmployeeFile('docx', '<%= item._id %>')"
+                                >
+                                  <a class="dropdown-item">Docx</a>
+                                </li>
+                                <li
+                                  onclick="downloadSingleEmployeeFile('pdf', '<%= item._id %>')"
+                                >
+                                  <a class="dropdown-item">Pdf</a>
+                                </li>
+                                <li
+                                  onclick="downloadSingleEmployeeFile('excel', '<%= item._id %>')"
+                                >
+                                  <a class="dropdown-item">Excel</a>
+                                </li>
+                              </ul>
+                            </div>
+                            <a
+                              id="detailsSingle<%= index+1 %>"
+                              href="/goals-worksheet-single/view/<%= item?._id %>"
+                              class="btn btn-info rounded-button"
+                              type="button"
+                              title="See Details"
+                            >
+                              <i
+                                class="align-middle"
+                                data-feather="external-link"
+                              ></i>
+                            </a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/popper.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@1.0.0/html-docx.js"></script>
+
+    <script>
+      // Function to handle the select-all checkbox
+      function handleSelectAll() {
+        const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+        const headerCheckboxes = document.querySelectorAll(".header-checkbox");
+
+        for (const checkbox of headerCheckboxes) {
+          checkbox.checked = selectAllCheckbox.checked;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add a change event listener to the select-all checkbox
+        const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+        selectAllCheckbox.addEventListener("change", handleSelectAll);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add an event listener to the form submit button
+        const createGroupBtn = document.getElementById("create_group_btn");
+        createGroupBtn.addEventListener("click", submitForm);
+      });
+
+      function submitForm() {
+        // Gather checked values of header checkboxes
+        const headerCheckboxes = document.querySelectorAll(
+          ".header-checkbox:checked"
+        );
+        const headerValues = Array.from(headerCheckboxes).map(
+          (checkbox) => checkbox.dataset.column
+        );
+
+        // Append the checked values to the form as a hidden input
+        const form = document.getElementById("createGroupForm");
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "selectedIds"; // You can change the name as needed
+        hiddenInput.value = JSON.stringify(headerValues); // Convert to JSON to send as an array
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+      }
+    </script>
+
+    <script>
+      var dragCol = null;
+
+      function handleDragStart(e) {
+        dragCol = this;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", this.outerHTML);
+      }
+
+      function handleDragOver(e) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        e.dataTransfer.dropEffect = "move";
+        return false;
+      }
+      const updateColumn = async (id, columnOrder) => {
+        try {
+          const url = `/update-columnOrder/${id}`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ columnOrder }),
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+            console.log(new Data(), responseData); // Success message
+          } else {
+            console.error(
+              new Data(),
+              "Failed to update column:",
+              response.status,
+              response.statusText
+            );
+          }
+        } catch (error) {
+          console.error(new Date(), "An error occurred:", error.message);
+        }
+      };
+
+      const fetchColumnOrder = async (id) => {
+        try {
+          const response = await fetch(`/get-ColumnOrder/${id}`);
+          const data = await response.json();
+
+          if (response.status === 200) {
+            return data; // Return the data if the request is successful
+          } else {
+            console.error("Failed to fetch column order:", response.status);
+            return null; // Return null in case of an error
+          }
+        } catch (error) {
+          console.error("An error occurred:", error.message);
+          return null; // Return null in case of an error
+        }
+      };
+
+      async function handleDrop(e) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        if (dragCol === this) {
+          return false;
+        }
+
+        var sourceIndex = Array.from(dragCol.parentNode.children).indexOf(
+          dragCol
+        );
+        var targetIndex = Array.from(this.parentNode.children).indexOf(this);
+        var table = document.getElementById("sortableTable");
+        var rows = table.rows;
+
+        // Create an array to store the new order of column indexes and IDs
+        var newOrder = [];
+        var newIDs = [];
+
+        for (var i = 0; i < rows.length; i++) {
+          var sourceCell = rows[i].cells[sourceIndex];
+          var targetCell = rows[i].cells[targetIndex];
+
+          // Store the index of the targetCell in the newOrder array
+          newOrder.push(
+            Array.from(this.parentNode.children).indexOf(targetCell)
+          );
+
+          // Store the ID of the sourceCell in the newIDs array
+          newIDs.push(sourceCell.id);
+
+          // Remove the sourceCell from its current position
+          rows[i].deleteCell(sourceIndex);
+
+          // Insert the sourceCell at the target position
+          var nextIndex =
+            targetIndex < sourceIndex ? targetIndex : targetIndex + 1;
+
+          rows[i].insertBefore(sourceCell, rows[i].cells[targetIndex]);
+        }
+
+        // Update the column order based on the newOrder array
+        var columnOrder = Array.from(
+          table.querySelectorAll("th[draggable=true]"),
+          function (header) {
+            return header.id;
+          }
+        );
+
+        const comId = `<%= company %>`;
+        await updateColumn(comId, columnOrder);
+        //  console.log(columnOrder)
+        // Update the column order in localStorage
+        // localStorage.setItem("columnOrder", JSON.stringify(columnOrder));
+
+        return false;
+      }
+
+      var headers = document.querySelectorAll("th[draggable=true]");
+      [].forEach.call(headers, function (header) {
+        header.addEventListener("dragstart", handleDragStart, false);
+        header.addEventListener("dragover", handleDragOver, false);
+        header.addEventListener("drop", handleDrop, false);
+      });
+    </script>
+
+    <script>
+      document
+        .getElementById("downloadButton")
+        .addEventListener("click", function () {
+          const optionElement = document.getElementById("downloadOptions");
+          optionElement.style.display === "none"
+            ? (optionElement.style.display = "block")
+            : (optionElement.style.display = "none");
+        });
+
+      function downloadFile(option) {
+        // Gather checked values of header checkboxes
+        const headerCheckboxes = document.querySelectorAll(
+          ".header-checkbox:checked"
+        );
+        const headerValues = Array.from(headerCheckboxes).map(
+          (checkbox) => checkbox.dataset.column
+        );
+        if (headerValues.length === 0) {
+          alert("Please, check at least one employee.");
+        } else {
+          window.location.href = `/goals-worksheet/download/${headerValues}?option=${option}`;
+        }
+      }
+
+      function openOptions(id) {
+        const optionElement = document.getElementById(
+          `${"downloadSingleOptions" + id}`
+        );
+        optionElement.style.display === "none"
+          ? (optionElement.style.display = "block")
+          : (optionElement.style.display = "none");
+      }
+
+      function downloadSingleEmployeeFile(option, id) {
+        if (["docx", "pdf", "excel"].includes(option)) {
+          window.location.href = `/goals-worksheet/download/${[
+            id,
+          ]}?option=${option}`;
+        } else {
+          alert("Please, select the right format.");
+        }
+      }
+    </script>
+  </body>
+</html>

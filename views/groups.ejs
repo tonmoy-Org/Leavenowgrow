@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Groups</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .company-admin-link:link {
+        color: red;
+      }
+
+      .draggable-row {
+        cursor: grab;
+      }
+
+      /* mouse over link */
+      .company-admin-link:hover {
+        color: hotpink;
+      }
+
+      /* selected link */
+      .company-admin-link:active {
+        color: blue;
+      }
+
+      .cursor_pointer {
+        cursor: pointer;
+      }
+
+      .rounded-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "groups" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div class="row pb-2">
+              <div
+                class="col-6"
+              >
+                <h1 class="h3 mb-3">Groups</h1>
+              </div>
+              <div class="col-6 relative right-0">
+                <!-- <div
+                  class="d-flex align-items-center justify-content-end gap-2"
+                >
+                  <a
+                    href="/goals-worksheet/company/view/<%= company?._id %>"
+                    role="button"
+                    class="rounded-button btn btn-success"
+                    title="Goals Worksheet View"
+                  >
+                    <i class="fas fa-clipboard-list"></i>
+                  </a>
+                  <a
+                    href="/goals-worksheet/<%= company?._id %>"
+                    role="button"
+                    class="rounded-button btn btn-secondary"
+                    title="Goals Worksheet"
+                  >
+                    <i class="align-middle" data-feather="file-plus"></i>
+                  </a>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                <div class="card flex-fill">
+                  <div
+                    class="table-responsive"
+                    style="max-height: 900px; max-width: 100%; overflow: auto"
+                  >
+                    <table
+                      class="table table-hover my-0"
+                      style="font-family: Arial, Helvetica, sans-serif"
+                    >
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Employee View</th>
+                          <!-- <th>Form Link</th> -->
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% groups.forEach(function(group, index) { %>
+                        <tr id="row<%= group._id %>">
+                          <td class="cursor_pointer"><%= index + 1 %></td>
+                          <td class="cursor_pointer"><%= group.name %></td>
+                          <td
+                            class="d-flex align-items-center justify-content-start gap-2"
+                          >
+                            <a
+                              href="/group-admin/view/<%= group._id %>"
+                              role="button"
+                              class="rounded-button btn btn-primary"
+                              title="Group View"
+                              ><i class="fas fa-eye"></i
+                            ></a>
+                            <a
+                              href="/goals-worksheet/group/view/<%= group._id %>"
+                              role="button"
+                              class="rounded-button btn btn-success"
+                              title="Goals Worksheet View"
+                              ><i class="fas fa-clipboard-list"></i
+                            ></a>
+                          </td>
+                          <!-- <td>
+                            <div class="d-flex align-items-center gap-2">
+                              <a
+                                href="/group-formadmin/<%= group._id %>"
+                                role="button"
+                                class="rounded-button btn btn-info"
+                                title="AOA Submission"
+                                ><i class="fas fa-user-plus"></i
+                              ></a>
+                              <a
+                                href="/group-goals-worksheet/<%= group?._id %>"
+                                role="button"
+                                class="rounded-button btn btn-secondary"
+                                title="Goals Worksheet"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="file-plus"
+                                ></i>
+                              </a>
+                            </div>
+                          </td> -->
+                          <td class="">
+                            <div class="d-flex align-items-center gap-2">
+                              <button
+                                type="button"
+                                class="btn btn-info rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal<%= group._id %>"
+                              >
+                                <i class="align-middle" data-feather="edit"></i>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-danger rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal<%= group._id %>"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="trash"
+                                ></i>
+                              </button>
+                            </div>
+                          </td>
+
+                          <td></td>
+                        </tr>
+
+                        <!-- Modal -->
+                        <div
+                          class="modal fade"
+                          id="editModal<%= group._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Edit group
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/edit-group-name" method="POST">
+                                  <input
+                                    type="hidden"
+                                    value="<%= group._id %>"
+                                    name="groupId"
+                                  />
+                                  <div class="form-group">
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Group Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      value="<%= group.name %>"
+                                      name="groupName"
+                                      required
+                                    />
+                                  </div>
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Change Admin</label
+                                    >
+                                    <select
+                                      class="form-control"
+                                      name="user_id"
+                                      required
+                                    >
+                                      <option value="" disabled>
+                                        --Choose new Admin--
+                                      </option>
+                                      <% admins.forEach((admin, index) => { %>
+                                      <option
+                                        id="<%= group?.adminId %>"
+                                        class="adminIdOption"
+                                        value="<%= admin._id %>"
+                                      >
+                                        <%= admin.name %>
+                                      </option>
+                                      <% }) %>
+                                    </select>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Confirm delete modal-->
+                        <div
+                          class="modal fade"
+                          id="confirmDeleteModal<%= group._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Confirm Delete
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <h6>
+                                  Are you sure you want to delete <%= group.name
+                                  %>
+                                </h6>
+                              </div>
+
+                              <div class="modal-footer">
+                                <a
+                                  href="/delete-group/<%= group._id %>"
+                                  type=" submit"
+                                  class="btn btn-danger"
+                                  >Delete
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+
+    <script>
+      const adminIdOptionElem = document.querySelectorAll(".adminIdOption");
+
+      adminIdOptionElem.forEach((elem) => {
+        if (elem.value === elem.id) {
+          elem.selected = true;
+        }
+      });
+    </script>
+  </body>
+</html>

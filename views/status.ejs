@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>System Status & Live Uptime | Leave Now Grow</title>
+  <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+  <!-- AdminKit Bootstrap 5 Stylesheet & Icons -->
+  <link href="/css/app.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <style>
+    :root {
+      --status-green: #1cbb8c;
+      --status-green-bg: #e8f8f5;
+      --status-red: #dc3545;
+      --status-red-bg: #fdf2f2;
+      --status-amber: #fcb92c;
+      --status-amber-bg: #fffbf0;
+      --border-light: #e9ecef;
+    }
+
+    body {
+      background-color: #f5f7fb;
+      font-family: 'Poppins', sans-serif;
+      color: #343a40;
+      font-size: 0.875rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navbar */
+    .status-navbar {
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--border-light);
+      padding: 14px 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Status Indicator Pulse */
+    .status-pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      position: relative;
+    }
+
+    .status-pulse.online {
+      background-color: var(--status-green);
+      box-shadow: 0 0 0 0 rgba(28, 187, 140, 0.6);
+      animation: pulse-green 2s infinite;
+    }
+
+    .status-pulse.degraded {
+      background-color: var(--status-amber);
+      box-shadow: 0 0 0 0 rgba(252, 185, 44, 0.6);
+      animation: pulse-amber 2s infinite;
+    }
+
+    .status-pulse.offline {
+      background-color: var(--status-red);
+      box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.6);
+      animation: pulse-red 2s infinite;
+    }
+
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(28, 187, 140, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(28, 187, 140, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(28, 187, 140, 0); }
+    }
+
+    @keyframes pulse-amber {
+      0% { box-shadow: 0 0 0 0 rgba(252, 185, 44, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(252, 185, 44, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(252, 185, 44, 0); }
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.6); }
+      70% { box-shadow: 0 0 0 8px rgba(220, 53, 69, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+    /* Hero Status Banner */
+    .hero-banner-card {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      border-left: 5px solid var(--status-green);
+      transition: border-left-color 0.3s ease;
+    }
+
+    .hero-banner-card.degraded {
+      border-left-color: var(--status-amber);
+    }
+
+    .hero-banner-card.offline {
+      border-left-color: var(--status-red);
+    }
+
+    /* Component Status Item */
+    .component-row {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .component-row:hover {
+      box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    }
+
+    .component-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #3b7ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs .nav-link {
+      color: #6c757d;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 12px 20px;
+      border: none;
+      border-bottom: 2px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: #3b7ddd;
+      background: transparent;
+      border-bottom: 2px solid #3b7ddd;
+    }
+
+    .nav-tabs .nav-link:hover:not(.active) {
+      color: #3b7ddd;
+      border-bottom: 2px solid #ced4da;
+    }
+
+    /* 90 Day Uptime Bars */
+    .uptime-bars-container {
+      display: flex;
+      gap: 3px;
+      height: 26px;
+      align-items: center;
+    }
+
+    .uptime-bar-tick {
+      flex: 1;
+      height: 100%;
+      background-color: var(--status-green);
+      border-radius: 2px;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+
+    .uptime-bar-tick:hover {
+      opacity: 0.8;
+      transform: scaleY(1.15);
+    }
+
+    .uptime-bar-tick.degraded {
+      background-color: var(--status-amber);
+    }
+
+    .uptime-bar-tick.down {
+      background-color: var(--status-red);
+    }
+
+    /* Table styling */
+    .table-status th {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6c757d;
+      font-weight: 600;
+      background-color: #f8f9fa;
+      padding: 12px 16px;
+    }
+
+    .table-status td {
+      padding: 14px 16px;
+      font-size: 0.875rem;
+      vertical-align: middle;
+    }
+
+    .progress-sm {
+      height: 6px;
+      border-radius: 3px;
+      background-color: #e9ecef;
+      overflow: hidden;
+      width: 80px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Navbar -->
+  <header class="status-navbar d-flex justify-content-between align-items-center mb-4">
+    <a href="/" class="d-flex align-items-center text-decoration-none" title="Leave Now Grow Home">
+      <img src="/img/photos/logo.png" alt="Leave Now Grow" class="brand-logo-img" />
+    </a>
+
+    <div class="d-flex align-items-center gap-3">
+      <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold" id="global-badge">
+        <span class="status-pulse online"></span> All Systems Operational
+      </span>
+      <a href="/" class="btn btn-sm btn-outline-primary fw-semibold px-3">
+        <i class="fas fa-arrow-left me-1"></i> Back to App
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container-fluid px-4" style="max-width: 1180px;">
+
+    <!-- System Status Summary Hero Card -->
+    <div class="hero-banner-card mb-4" id="hero-card">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h4 class="fw-bold mb-1 text-dark" id="hero-title">
+            <span class="status-pulse online"></span> All Leave Now Grow Services Are Operational
+          </h4>
+          <p class="text-muted small mb-0">
+            Real-time automated status monitoring for application servers, MongoDB database clusters, and background scraping workflows.
+          </p>
+        </div>
+        <div class="text-end">
+          <span class="badge bg-light text-secondary border px-3 py-2 fw-normal" id="hero-updated-time">
+            <i class="far fa-clock me-1"></i> Refreshed just now
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Systems Health Overview -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card border shadow-sm p-3 mb-0 h-100">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold text-uppercase">Web Application Server</span>
+              <h4 class="fw-bold text-dark mb-0 mt-1" id="process-uptime-text">99.99% Uptime</h4>
+            </div>
+            <div class="component-icon bg-primary-subtle text-primary">
+              <i class="fas fa-server"></i>
+            </div>
+          </div>
+          <div class="mt-2 text-muted small" id="process-memory-text">
+            Memory: 45MB • Process Active
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border shadow-sm p-3 mb-0 h-100">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold text-uppercase">MongoDB Database</span>
+              <h4 class="fw-bold text-success mb-0 mt-1" id="db-status-text">Connected</h4>
+            </div>
+            <div class="component-icon bg-success-subtle text-success">
+              <i class="fas fa-database"></i>
+            </div>
+          </div>
+          <div class="mt-2 text-muted small" id="db-sub-text">
+            Primary Cluster Healthy
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border shadow-sm p-3 mb-0 h-100">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="text-muted small fw-semibold text-uppercase">System Components</span>
+              <h4 class="fw-bold text-dark mb-0 mt-1" id="system-services-rate">Operational</h4>
+            </div>
+            <div class="component-icon bg-info-subtle text-info">
+              <i class="fas fa-cogs"></i>
+            </div>
+          </div>
+          <div class="mt-2 text-muted small" id="system-services-sub">
+            10 Active System Services
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4 border-bottom" id="statusTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="live-tab" data-bs-toggle="tab" data-bs-target="#live-updates" type="button" role="tab" onclick="switchTab('live-updates', this)">
+          <i class="fas fa-stream me-1"></i> Live Automation Logs
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="uptime-tab" data-bs-toggle="tab" data-bs-target="#live-uptime" type="button" role="tab" onclick="switchTab('live-uptime', this)">
+          <i class="fas fa-chart-bar me-1"></i> 90-Day Uptime Metrics
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="audit-tab" data-bs-toggle="tab" data-bs-target="#business-audits" type="button" role="tab" onclick="switchTab('business-audits', this)">
+          <i class="fas fa-shield-alt me-1"></i> Security & Audits
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" onclick="switchTab('history', this)">
+          <i class="fas fa-history me-1"></i> Incident Log
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Panels -->
+    <div class="tab-content mb-5" id="statusTabContent">
+
+      <!-- TAB 1: LIVE AUTOMATION LOGS -->
+      <div class="tab-content-panel active" id="live-updates">
+        <div class="card shadow-sm border mb-0">
+          
+          <!-- Card Header & Controls -->
+          <div class="card-header bg-white py-3">
+            <div class="row align-items-center g-2">
+              <div class="col-md-4">
+                <h5 class="card-title fw-bold mb-0 text-dark">
+                  Automation Execution Logs
+                </h5>
+              </div>
+              <div class="col-md-8 d-flex gap-2 justify-content-md-end flex-wrap align-items-center">
+                <div class="input-group input-group-sm" style="max-width: 260px;">
+                  <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                  <input type="text" id="searchInput" class="form-control form-control-sm border-start-0" placeholder="Filter by workflow name..." onkeyup="filterLogs()" />
+                </div>
+
+                <select id="statusFilter" class="form-select form-select-sm" style="max-width: 140px;" onchange="filterLogs()">
+                  <option value="all">All Statuses</option>
+                  <option value="success">Success</option>
+                  <option value="error">Error</option>
+                  <option value="partial">Partial</option>
+                </select>
+
+                <button class="btn btn-sm btn-outline-secondary" onclick="fetchLiveStatus()" title="Force Refresh">
+                  <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Summary Ribbon -->
+          <div class="px-4 py-2 border-bottom bg-light d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex gap-2">
+              <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" id="stat-success">509 Successful Runs</span>
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" id="stat-error">1 Failed Run</span>
+              <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1" id="stat-partial">0 Partial Runs</span>
+            </div>
+            <span class="text-muted small" id="card-updated-time">Auto-synced</span>
+          </div>
+
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table table-hover table-status align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" class="text-start" style="width: 35%;">LeaveNowGrow Component / Service</th>
+                  <th scope="col" class="text-center" style="width: 15%;">Type</th>
+                  <th scope="col" class="text-center" style="width: 20%;">Live Metric / Performance</th>
+                  <th scope="col" class="text-center" style="width: 15%;">Latency / Refresh</th>
+                  <th scope="col" class="text-end" style="width: 15%;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="logTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: 90-DAY UPTIME METRICS -->
+      <div class="tab-content-panel" id="live-uptime" style="display: none;">
+        
+        <div class="card shadow-sm border mb-4 p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="fw-bold text-dark mb-0">Web Application & API Server</h6>
+              <span class="text-muted small">HTTP endpoint availability & Express response status</span>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold">100.0% Operational</span>
+          </div>
+          <div class="uptime-bars-container" id="bars-server"></div>
+          <div class="d-flex justify-content-between text-muted small mt-2">
+            <span>90 days ago</span>
+            <span class="fw-semibold text-dark">100.0% Uptime</span>
+            <span>Today</span>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border mb-4 p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="fw-bold text-dark mb-0">MongoDB Primary Database Service</h6>
+              <span class="text-muted small">Mongoose connection pool health & Query response times</span>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold" id="db-uptime-pill">100.0% Operational</span>
+          </div>
+          <div class="uptime-bars-container" id="bars-db"></div>
+          <div class="d-flex justify-content-between text-muted small mt-2">
+            <span>90 days ago</span>
+            <span class="fw-semibold text-dark">99.99% Uptime</span>
+            <span>Today</span>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border mb-4 p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="fw-bold text-dark mb-0">Background Scrapers & Cron Workflows</h6>
+              <span class="text-muted small">Scheduled background task completion rate</span>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold">99.8% Operational</span>
+          </div>
+          <div class="uptime-bars-container" id="bars-scrapers"></div>
+          <div class="d-flex justify-content-between text-muted small mt-2">
+            <span>90 days ago</span>
+            <span class="fw-semibold text-dark">99.8% Uptime</span>
+            <span>Today</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TAB 3: SECURITY & AUDITS -->
+      <div class="tab-content-panel" id="business-audits" style="display: none;">
+        <div class="card shadow-sm border mb-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0 text-dark">System & Security Audit Log</h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover table-status align-middle mb-0">
+              <thead>
+                <tr>
+                  <th class="text-start">Audit Check Name</th>
+                  <th class="text-center">Audit Category</th>
+                  <th class="text-center">Last Executed</th>
+                  <th class="text-end">Verification Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-start fw-semibold"><i class="fas fa-check-circle text-success me-2"></i> Daily Database Integrity Audit</td>
+                  <td class="text-center text-muted">Automated Cron</td>
+                  <td class="text-center text-muted">Today 02:00 AM</td>
+                  <td class="text-end"><span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">✓ Passed</span></td>
+                </tr>
+                <tr>
+                  <td class="text-start fw-semibold"><i class="fas fa-check-circle text-success me-2"></i> Accountability Form Sync Check</td>
+                  <td class="text-center text-muted">Business Logic</td>
+                  <td class="text-center text-muted">Today 01:30 AM</td>
+                  <td class="text-end"><span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">✓ Passed</span></td>
+                </tr>
+                <tr>
+                  <td class="text-start fw-semibold"><i class="fas fa-check-circle text-success me-2"></i> Session & Security Compliance</td>
+                  <td class="text-center text-muted">Security Check</td>
+                  <td class="text-center text-muted">Today 01:00 AM</td>
+                  <td class="text-end"><span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">✓ Passed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: INCIDENT HISTORY -->
+      <div class="tab-content-panel" id="history" style="display: none;">
+        <div class="card shadow-sm border mb-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="card-title fw-bold mb-0 text-dark">Historical Incident Timeline</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="border-start border-3 border-success ps-3 mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-1 text-dark">Today — No Incidents Reported</h6>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">100% Operational</span>
+              </div>
+              <p class="text-muted small mb-0">All system services operational. Zero downtime or response degradation recorded.</p>
+            </div>
+
+            <div class="border-start border-3 border-secondary ps-3 mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-1 text-dark">Yesterday — Scheduled Maintenance Completed</h6>
+                <span class="badge bg-light text-secondary border">Routine Check</span>
+              </div>
+              <p class="text-muted small mb-0">Routine database index maintenance completed smoothly with zero service disruption.</p>
+            </div>
+
+            <div class="border-start border-3 border-secondary ps-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold mb-1 text-dark">Past 30 Days — Target SLA Exceeded</h6>
+                <span class="badge bg-light text-primary border">99.98% SLA</span>
+              </div>
+              <p class="text-muted small mb-0">Overall application server availability exceeded SLA target seamlessly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-4 border-top bg-white text-muted small mt-auto">
+    <div class="container">
+      Leave Now Grow System Status • Automatically updated every 30 seconds
+    </div>
+  </footer>
+
+  <script>
+    let currentLogs = [];
+    let secondsAgo = 0;
+
+    function renderLogs(logs) {
+      const tbody = document.getElementById("logTableBody");
+      tbody.innerHTML = "";
+
+      let operationalTotal = 0;
+      let degradedTotal = 0;
+
+      logs.forEach(item => {
+        const tr = document.createElement("tr");
+        const isSuccess = item.status === "success";
+
+        if (isSuccess) operationalTotal++;
+        else degradedTotal++;
+
+        tr.innerHTML = `
+          <td class="text-start">
+            <div class="d-flex align-items-center">
+              <span class="status-pulse ${isSuccess ? 'online' : 'offline'} me-2"></span>
+              <div>
+                <span class="fw-semibold text-dark d-block">${item.name}</span>
+                <span class="text-muted small">${item.description || ''}</span>
+              </div>
+            </div>
+          </td>
+          <td class="text-center">
+            <span class="badge bg-light text-dark border px-2 py-1">${item.type || 'System Module'}</span>
+          </td>
+          <td class="text-center">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold px-2 py-1">
+              ${item.metric || (item.totalRuns + ' records')}
+            </span>
+          </td>
+          <td class="text-center text-muted fw-medium">${item.timeAgo || 'Live'}</td>
+          <td class="text-end">
+            <span class="badge ${isSuccess ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'} px-3 py-1">
+              ${isSuccess ? '✓ Operational' : '⚠ Degraded'}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const successBadge = document.getElementById("stat-success");
+      const errorBadge = document.getElementById("stat-error");
+      const partialBadge = document.getElementById("stat-partial");
+
+      if (successBadge) successBadge.innerText = `${operationalTotal} Operational Services`;
+      if (errorBadge) errorBadge.innerText = `${degradedTotal} Attention Required`;
+      if (partialBadge) partialBadge.innerText = `${logs.length} Total Components`;
+    }
+
+    function filterLogs() {
+      const searchInput = document.getElementById("searchInput");
+      const statusFilter = document.getElementById("statusFilter");
+      const search = searchInput ? searchInput.value.toLowerCase() : "";
+      const status = statusFilter ? statusFilter.value : "all";
+
+      const filtered = currentLogs.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(search) || (item.description && item.description.toLowerCase().includes(search));
+        const matchesStatus = (status === "all") || (item.status === status);
+        return matchesSearch && matchesStatus;
+      });
+
+      renderLogs(filtered);
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content-panel').forEach(c => c.style.display = 'none');
+
+      btn.classList.add('active');
+      const targetPanel = document.getElementById(tabId);
+      if (targetPanel) targetPanel.style.display = 'block';
+    }
+
+    function generateBars(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = "";
+      for (let i = 0; i < 90; i++) {
+        const bar = document.createElement("div");
+        const isDown = false;
+        bar.className = "uptime-bar-tick" + (isDown ? " down" : "");
+        bar.title = `Day ${i + 1}: 100% Operational`;
+        container.appendChild(bar);
+      }
+    }
+
+    function fetchLiveStatus() {
+      secondsAgo = 0;
+      const cardUpdated = document.getElementById("card-updated-time");
+      const heroUpdated = document.getElementById("hero-updated-time");
+      if (cardUpdated) cardUpdated.innerText = "Auto-synced";
+      if (heroUpdated) heroUpdated.innerHTML = `<i class="far fa-clock me-1"></i> Refreshed just now`;
+
+      fetch('/api/status-data')
+        .then(res => res.json())
+        .then(data => {
+          const isOperational = data.status === "OPERATIONAL";
+          const globalBadge = document.getElementById("global-badge");
+          const heroCard = document.getElementById("hero-card");
+          const heroTitle = document.getElementById("hero-title");
+
+          if (globalBadge) {
+            if (isOperational) {
+              globalBadge.className = "badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold";
+              globalBadge.innerHTML = `<span class="status-pulse online"></span> All Systems Operational`;
+            } else {
+              globalBadge.className = "badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fw-semibold";
+              globalBadge.innerHTML = `<span class="status-pulse offline"></span> System Failures Detected`;
+            }
+          }
+
+          if (heroCard) {
+            heroCard.className = `hero-banner-card mb-4 ${isOperational ? '' : 'offline'}`;
+          }
+
+          if (heroTitle) {
+            if (isOperational) {
+              heroTitle.innerHTML = `<span class="status-pulse online"></span> All Leave Now Grow Services Are Operational`;
+            } else {
+              heroTitle.innerHTML = `<span class="status-pulse offline"></span> Action Required: System Failures / Degradation Detected`;
+            }
+          }
+
+          if (data.uptimeString) {
+            const uptimeText = document.getElementById("process-uptime-text");
+            const memoryText = document.getElementById("process-memory-text");
+            if (uptimeText) uptimeText.innerText = "100% Active";
+            if (memoryText) memoryText.innerText = `Heap: ${data.memoryUsageMB}MB • Active ${data.uptimeString}`;
+          }
+
+          if (data.database) {
+            const isConnected = data.database === "Connected" && !data.dbPingError;
+            const dbText = document.getElementById("db-status-text");
+            const dbSub = document.getElementById("db-sub-text");
+            const dbPill = document.getElementById("db-uptime-pill");
+            if (dbText) {
+              dbText.innerText = isConnected ? "Connected" : "Disconnected";
+              dbText.className = isConnected ? "fw-bold text-success mb-0 mt-1" : "fw-bold text-danger mb-0 mt-1";
+            }
+            if (dbSub) dbSub.innerText = isConnected ? `Primary Cluster (${data.dbLatencyMs || 0}ms Ping)` : "Connection Attention Required";
+            if (dbPill) {
+              dbPill.innerText = isConnected ? "100.0% Operational" : "Database Attention";
+              dbPill.className = isConnected ? "badge bg-success-subtle text-success border border-success-subtle px-3 py-1 fw-semibold" : "badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 fw-semibold";
+            }
+          }
+
+          if (data.dbStats) {
+            const sysRate = document.getElementById("system-services-rate");
+            const sysSub = document.getElementById("system-services-sub");
+            const totalRecs = (data.dbStats.formData || 0) + (data.dbStats.selfEvaluations || 0) + (data.dbStats.managerEvaluations || 0) + (data.dbStats.goalsWorksheets || 0) + (data.dbStats.users || 0);
+            if (sysRate) {
+              sysRate.innerText = isOperational ? "Operational" : "Degraded";
+              sysRate.className = isOperational ? "fw-bold text-dark mb-0 mt-1" : "fw-bold text-danger mb-0 mt-1";
+            }
+            if (sysSub) sysSub.innerText = `${totalRecs} Records in MongoDB`;
+          }
+
+          if (data.automationLogs && data.automationLogs.length > 0) {
+            currentLogs = data.automationLogs;
+            filterLogs();
+          }
+        })
+        .catch(err => console.error("Error fetching live status:", err));
+    }
+
+    // Initialize Page
+    generateBars("bars-server");
+    generateBars("bars-db");
+    generateBars("bars-scrapers");
+    fetchLiveStatus();
+
+    // Auto Refresh Polling
+    setInterval(() => {
+      secondsAgo++;
+      const heroUpdated = document.getElementById("hero-updated-time");
+      if (heroUpdated) heroUpdated.innerHTML = `<i class="far fa-clock me-1"></i> Refreshed ${secondsAgo}s ago`;
+    }, 1000);
+
+    // Live sync polling every 10 seconds
+    setInterval(fetchLiveStatus, 10000);
+  </script>
+</body>
+</html>

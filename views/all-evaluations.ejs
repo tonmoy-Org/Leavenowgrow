@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head id="applicantStyles">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+  <meta name="author" content="AdminKit">
+  <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+  <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+  <title><%= formData?.name %> - Peroidic Performance </title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- bootstrap 5.3 cdn  -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    label {
+      font-weight: 600;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body style="background-color: #4287f5;">
+  <div class="wrapper">
+    <div class="main p-lg-5 p-2">
+      <main class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <!-- employee original AOA  -->
+            <div class="col-12" style="margin: 0 auto;">
+              <!-- tabs to select which form  -->
+              <ul class="bg-white p-2 rounded nav nav-pills justify-content-center mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" style="width: 256px;" id="pills-aoa-tab" data-bs-toggle="pill" data-bs-target="#pills-aoa" type="button" role="tab" aria-controls="pills-aoa" aria-selected="true">AOA</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" style="width: 256px;" id="pills-self-tab" data-bs-toggle="pill" data-bs-target="#pills-self" type="button" role="tab" aria-controls="pills-self" aria-selected="false">Self Evaluation</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" style="width: 256px;" id="pills-manager-tab" data-bs-toggle="pill" data-bs-target="#pills-manager" type="button" role="tab" aria-controls="pills-manager" aria-selected="false">Manager Evaluation</button>
+                </li>
+              </ul>
+              <div class="bg-white p-2 rounded d-flex align-items-center justify-content-between gap-4 mb-3">
+                <!-- period select option  -->
+                <select id="selfSelect" class="w-50 form-select" aria-label="Default select example">
+                  <option value="">Choose Period</option>
+                  <% selfVersions?.forEach(function(version, idx) { %>
+                    <option id="<%= version?._id %>" value="<%= version?._id %>,<%= version?.managerEvaluationId %>"><%= version?.quarter %>, <%= version?.year %></option>
+                  <% }); %>
+                </select>
+                <!-- dropdown download button  -->
+                <div class="dropdown">
+                  <button <%- disabled %> class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Download
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li onclick="downloadAllEvaluations('DOCX', ['<%= formData?._id %>', '<%= selfEvaluationData?._id %>', '<%= managerEvaluationData?._id %>'])">
+                      <p class="dropdown-item">
+                        DOCX
+                      </p>
+                    </li>
+                    <li onclick="downloadAllEvaluations('EXCEL', ['<%= formData?._id %>', '<%= selfEvaluationData?._id %>', '<%= managerEvaluationData?._id %>'])">
+                      <p class="dropdown-item">
+                        EXCEL
+                      </p>
+                    </li>
+                    <li onclick="downloadAllEvaluations('PDF', ['<%= formData?._id %>', '<%= selfEvaluationData?._id %>', '<%= managerEvaluationData?._id %>'])">
+                      <p class="dropdown-item">
+                        PDF
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- tab content  -->
+              <div class="tab-content" id="pills-tabContent">
+                <!-- original AOA  -->
+                <div class="tab-pane fade show active" id="pills-aoa" role="tabpanel" aria-labelledby="pills-aoa-tab" tabindex="0">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Original Employee AOA</h5>
+                      </div>
+
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                          <label for="name" class="input-label">Name</label>
+                          <small class="d-block form-text text-muted">
+                            First and last name.
+                          </small>
+                          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<%= formData?.name ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="title" class="input-label">Title</label>
+                          <small class="d-block form-text text-muted">
+                            EXACT current job title.
+                          </small>
+                          <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" value="<%= formData?.title ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="jobDescription" class="input-label">Job Description</label>
+                          <small class="d-block form-text text-muted">
+                            Describe your key job responsibilities in your current position. (3-5 bulleted statements, ranked in order of importance).
+                          </small>
+                          <textarea class="form-control" id="jobDescription" name="jobDescription" rows="3"><%= formData?.jobDescription.trim() ?? "" %></textarea>
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="managerSupervisor" class="input-label">Manager/Supervisor</label>
+                          <small class="d-block form-text text-muted">
+                            Name and EXACT title of the one person to whom you directly report; Who is responsible for your formal performance reviews?
+                          </small>
+                          <input type="text" class="form-control" id="managerSupervisor" name="managerSupervisor" placeholder="Enter manager/supervisor" value="<%= formData?.managerSupervisor ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="directReports" class="input-label">Direct Reports</label>
+                          <small class="d-block form-text text-muted">
+                            The names and EXACT titles of those persons who report directly to you; you are responsible for their formal performance reviews.
+                          </small>
+                          <textarea class="form-control" id="directReports" name="directReports" rows="3"><%= formData?.directReports.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="accountable" class="input-label">Accountable</label>
+                          <small class="d-block form-text text-muted">
+                            Areas of focus for which YOU, and ONLY YOU, are Accountable.
+                          </small>
+                          <textarea class="form-control" id="accountable" name="accountable" rows="3"><%= formData?.accountable.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="participate" class="input-label">Participate</label>
+                          <small class="d-block form-text text-muted">
+                            Activities you have responsibility to participate in but for which someone else has the “A".
+                          </small>
+                          <textarea class="form-control" id="participate" name="participate" rows="3"><%= formData?.participate.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label for="compensation" class="input-label">Compensation</label>
+                          <small class="d-block form-text text-muted">
+                            How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+                          </small>
+                          <textarea class="form-control" id="compensation" name="compensation" rows="3"><%= formData?.compensation ? formData?.compensation.trim() : "" %></textarea>
+                          
+                        </div> -->
+
+                        <div class="form-group">
+                          <label for="metrics" class="input-label">Metrics</label>
+                          <small class="d-block form-text text-muted">
+                            How does your direct supervisor measure your success?
+                          </small>
+                          <textarea class="form-control" id="metrics" name="metrics" rows="3"><%= formData?.metrics.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="positionalObjectives" class="input-label">Current Year Positional Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            What are your key objectives for this fiscal year in your current position? These are likely objectives that are currently in written form.
+                          </small>
+                          <textarea class="form-control" id="positionalObjectives" name="positionalObjectives" rows="3"><%= formData?.positionalObjectives.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label">Personal Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            What are your personal (not positional) objectives over the next 2-3 years and beyond?
+                          </small>
+                          <textarea class="form-control" id="personalObjectives" name="personalObjectives" rows="3"><%= formData?.personalObjectives.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label">Authority Levels</label>
+                          <small class="d-block form-text text-muted">
+                            What authority levels or decision rights do you have for planning, spending, hiring/firing, contractual relationships, structural changes, etc.?
+                          </small>
+                          <textarea class="form-control" id="authorityLevels" name="authorityLevels" rows="3"><%= formData?.authorityLevels?.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label">Delegation of Authority</label>
+                          <small class="d-block form-text text-muted">
+                            What freedom do you give to your subordinates to make decisions on their own, e.g. authority levels, requesting permission, submitting data, etc. Think about which of your accountabilities you might be able to delegate.
+                          </small>
+                          <textarea class="form-control" id="delegationOfAuthority" name="delegationOfAuthority" rows="3"><%= formData?.delegationOfAuthority?.trim() ?? "" %></textarea>
+                          
+                        </div>
+
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- self evaluation AOA  -->
+                <div class="tab-pane fade" id="pills-self" role="tabpanel" aria-labelledby="pills-self-tab" tabindex="0">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Self Evaluation - <%= selfEvaluationData?.quarter ?? '' %>, <%= selfEvaluationData?.year ?? '' %></h5>
+                      </div>
+
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                          <label for="name" class="input-label">Name</label>
+                          <small class="d-block form-text text-muted">
+                            First and last name.
+                          </small>
+                          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<%= selfEvaluationData?.name ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="title" class="input-label">Title</label>
+                          <small class="d-block form-text text-muted">
+                            Any changes to job title?
+                          </small>
+                          <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" value="<%= selfEvaluationData?.title ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="jobDescription" class="input-label">Job Description</label>
+                          <small class="d-block form-text text-muted">
+                            Any changes to job description?
+                          </small>
+                          <textarea class="form-control" id="jobDescription" name="jobDescription" rows="3"><%= selfEvaluationData?.jobDescription ? selfEvaluationData?.jobDescription.trim() : "" %></textarea>
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="managerSupervisor" class="input-label">Manager/Supervisor</label>
+                          <small class="d-block form-text text-muted">
+                            Name and EXACT title of immediate supervisor.
+                          </small>
+                          <input type="text" class="form-control" id="managerSupervisor" name="managerSupervisor" placeholder="Enter manager/supervisor" value="<%= selfEvaluationData?.managerSupervisor ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="directReports" class="input-label">Direct Reports</label>
+                          <small class="d-block form-text text-muted">
+                            Any changes in Direct Reports? (V=voluntary, I=Involuntary)
+                          </small>
+                          <textarea class="form-control" id="directReports" name="directReports" rows="3"><%= selfEvaluationData?.directReports ? selfEvaluationData?.directReports.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="accountable" class="input-label">Accountable</label>
+                          <small class="d-block form-text text-muted">
+                            Evaluation of performance against stated accountabilities. (2 - 3 examples of how they were successfully completed)
+                          </small>
+                          <textarea class="form-control" id="accountable" name="accountable" rows="3"><%= selfEvaluationData?.accountable ? selfEvaluationData?.accountable.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="participate" class="input-label">Participate</label>
+                          <small class="d-block form-text text-muted">
+                            Evaluation of performance against assigned participation activities. (2 - 3 examples of how others were helped in completing their Accountabilities)
+                          </small>
+                          <textarea class="form-control" id="participate" name="participate" rows="3"><%= selfEvaluationData?.participate ? selfEvaluationData?.participate.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label for="compensation" class="input-label">Compensation</label>
+                          <small class="d-block form-text text-muted">
+                            This area may be discussed privately with your manager during your Periodic Performance Discussion.
+                          </small>
+                          <textarea class="form-control" id="compensation" name="compensation" rows="3"><%= selfEvaluationData?.compensation ? selfEvaluationData?.compensation.trim() : "" %></textarea>
+                          
+                        </div> -->
+
+                        <div class="form-group">
+                          <label for="metrics" class="input-label">Metrics</label>
+                          <small class="d-block form-text text-muted">
+                            Evaluation of quantitative results of your assigned metrics for the past 12 months. (In the absence of 12 months of data, use the most current period)
+                          </small>
+                          <textarea class="form-control" id="metrics" name="metrics" rows="3"><%= selfEvaluationData?.metrics ? selfEvaluationData?.metrics.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="positionalObjectives" class="input-label">Current Year Positional Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            Rating (1 - 5) of performance against each assigned objective for the current time period
+                          </small>
+                          <textarea class="form-control" id="positionalObjectives" name="positionalObjectives" rows="3"><%= selfEvaluationData?.positionalObjectives ? selfEvaluationData?.positionalObjectives.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label">Personal Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on progress toward personal objectives. (Include any changes in person objectives since the previous review period)
+                          </small>
+                          <textarea class="form-control" id="personalObjectives" name="personalObjectives" rows="3"><%= selfEvaluationData?.personalObjectives ? selfEvaluationData?.personalObjectives.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label">Authority Levels</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on current level of authority and how it is impacting (positively or negatively) the completion of Accountabilities.
+                          </small>
+                          <textarea class="form-control" id="authorityLevels" name="authorityLevels" rows="3"><%= selfEvaluationData?.authorityLevels ? selfEvaluationData?.authorityLevels.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label">Delegation of Authority</label>
+                          <small class="d-block form-text text-muted">
+                            Rating (1 - 5) of Direct Report's performance on the specific responsibility that was delegated
+                          </small>
+                          <textarea class="form-control" id="delegationOfAuthority" name="delegationOfAuthority" rows="3"><%= selfEvaluationData?.delegationOfAuthority ? selfEvaluationData?.delegationOfAuthority.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="managerReviewSelf" class="input-label">Manager Review</label>
+                          <small class="d-block form-text text-muted">
+                            2 things my manager is doing well that support my success and two areas that could be improved to better support me.
+                          </small>
+                          <textarea class="form-control" id="managerReviewSelf" name="managerReviewSelf" rows="3"><%= selfEvaluationData?.managerReview ? selfEvaluationData?.managerReview.trim() : "" %></textarea>
+                          
+                        </div>
+
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- manager evaluation AOA -->
+                <div class="tab-pane fade" id="pills-manager" role="tabpanel" aria-labelledby="pills-manager-tab" tabindex="0">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Manager Evaluation - <%= managerEvaluationData?.quarter ?? '' %>, <%= managerEvaluationData?.year ?? '' %></h5>
+                      </div>
+
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group">
+                        </div>
+                        <div class="form-group">
+                          <label for="name" class="input-label">Name</label>
+                          <small class="d-block form-text text-muted">
+                            First and last name.
+                          </small>
+                          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<%= managerEvaluationData?.name ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="title" class="input-label">Title</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" value="<%= managerEvaluationData?.title ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="jobDescription" class="input-label">Job Description</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <textarea class="form-control" id="jobDescription" name="jobDescription" rows="3"><%= managerEvaluationData?.jobDescription ? managerEvaluationData?.jobDescription.trim() : "" %></textarea>
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="managerSupervisor" class="input-label">Manager/Supervisor</label>
+                          <small class="d-block form-text text-muted">
+                            Name and EXACT title of immediate supervisor.
+                          </small>
+                          <input type="text" class="form-control" id="managerSupervisor" name="managerSupervisor" placeholder="Enter manager/supervisor" value="<%= managerEvaluationData?.managerSupervisor ?? "" %>">
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="directReports" class="input-label">Direct Reports</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <textarea class="form-control" id="directReports" name="directReports" rows="3"><%= managerEvaluationData?.directReports ? managerEvaluationData?.directReports.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="accountable" class="input-label">Accountable</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments on self evaluation of performance against stated accountabilities. (Specific examples of where Accountabilities were met and examples of where things fell short)
+                          </small>
+                          <textarea class="form-control" id="accountable" name="accountable" rows="3"><%= managerEvaluationData?.accountable ? managerEvaluationData?.accountable.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="participate" class="input-label">Participate</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on the overall willingness to contribute to the execution of other's Accountabilities. (Specific examples)
+                          </small>
+                          <textarea class="form-control" id="participate" name="participate" rows="3"><%= managerEvaluationData?.participate ? managerEvaluationData?.participate.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <!-- <div class="form-group">
+                          <label for="compensation" class="input-label">Compensation</label>
+                          <small class="d-block form-text text-muted">
+                            How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+                          </small>
+                          <textarea class="form-control" id="compensation" name="compensation" rows="3"><%= managerEvaluationData?.compensation ? managerEvaluationData?.compensation.trim() : "" %></textarea>
+                          
+                        </div> -->
+
+                        <div class="form-group">
+                          <label for="metrics" class="input-label">Metrics</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on the results listed in the self evaluation. (Specific examples for areas of best performance and areas that need most improvement)
+                          </small>
+                          <textarea class="form-control" id="metrics" name="metrics" rows="3"><%= managerEvaluationData?.metrics ? managerEvaluationData?.metrics.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="positionalObjectives" class="input-label">Current Year Positional Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on the results listed in the self evaluation. (Specific examples for areas of best performance and areas that need most improvement)
+                          </small>
+                          <textarea class="form-control" id="positionalObjectives" name="positionalObjectives" rows="3"><%= managerEvaluationData?.positionalObjectives ? managerEvaluationData?.positionalObjectives.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label">Personal Objectives</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <textarea class="form-control" id="personalObjectives" name="personalObjectives" rows="3"><%= managerEvaluationData?.personalObjectives ? managerEvaluationData?.personalObjectives.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label">Authority Levels</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <textarea class="form-control" id="authorityLevels" name="authorityLevels" rows="3"><%= managerEvaluationData?.authorityLevels ? managerEvaluationData?.authorityLevels.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label">Delegation of Authority</label>
+                          <small class="d-block form-text text-muted">
+                            Manager comments?
+                          </small>
+                          <textarea class="form-control" id="delegationOfAuthority" name="delegationOfAuthority" rows="3"><%= managerEvaluationData?.delegationOfAuthority ? managerEvaluationData?.delegationOfAuthority.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="managerNotes" class="input-label">Manager Notes and Next Steps</label>
+                          
+                          <textarea class="form-control" id="managerNotes" name="managerNotes" rows="3"><%= managerEvaluationData?.managerNotes ? managerEvaluationData?.managerNotes.trim() : "" %></textarea>
+                          
+                        </div>
+
+                        <div class="form-group">
+                          <label for="managerReviewManager" class="input-label">Manager Review</label>
+                          <small class="d-block form-text text-muted">
+                            Comments on the feedback listed in the self evaluation.
+                          </small>
+                          <textarea class="form-control" id="managerReviewManager" name="managerReviewManager" rows="3"><%= managerEvaluationData?.managerReview ? managerEvaluationData?.managerReview.trim() : "" %></textarea>
+                          
+                        </div>
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer class="footer">
+        <%- include('partials/footer'); %>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    function downloadAllEvaluations (option, ids) {
+      window.location.href = `/all-evaluations-download/${ids}?option=${option}`;
+    }
+
+    document.getElementById("selfSelect").addEventListener("change", function () {
+      const versions = this.value;
+      const [selfVersion, managerVersion] = versions.split(",");
+
+      const currentHref = new URL(document.location.href);
+
+      currentHref.searchParams.set("self-version", selfVersion);
+      currentHref.searchParams.set("manager-version", managerVersion);
+
+      window.location.href = currentHref.toString();
+    })
+
+    // this piece of code, to select the option that chosen
+    const parsedUrl = new URL(document.location.href);
+    const id = parsedUrl.searchParams.get("self-version") || "<%= selfEvaluationData?._id %>";
+    document.getElementById(id).setAttribute("selected", "");
+
+    // currently not in use --->
+    // document.getElementById("managerSelect").addEventListener("change", function () {
+    //   const managerVersion = this.value;
+    //   const currentHref = new URL(document.location.href);
+
+    //   currentHref.searchParams.set("manager-version", managerVersion);
+
+    //   window.location.href = currentHref.toString();
+    // })
+    // <---
+  </script>
+</body>
+
+</html>

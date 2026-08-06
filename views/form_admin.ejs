@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Employee Form</title>
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- bootstrap 5.3.2 cdn  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      .error {
+        color: red;
+        font-weight: 800;
+      }
+      video {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+
+  <body style="background-color: #4287f5">
+    <div class="wrapper">
+      <!-- toast telling the email successfully delivered  -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div
+          id="successToast"
+          class="toast text-bg-success"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="d-flex align-items-center justify-content-around">
+            <div class="toast-body">Your message delivered successfully.</div>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- error modal if error occured  -->
+      <div
+        class="modal"
+        style="z-index: 9999"
+        id="errorModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Error Message</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <h6 class="error"></h6>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Okay
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- modal for sending AOA to someone with an email -->
+      <div
+        class="modal fade"
+        id="emailModal"
+        tabindex="-1"
+        aria-labelledby="emailModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="emailModalLabel">Send AOA</h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="send-aoa-link-form" class="row g-3">
+                <input
+                  type="hidden"
+                  name="groupId"
+                  value="<%= group ? groupId :
+                '' %> "
+                />
+                <input type="hidden" name="compId" value="<%=id %>" />
+                <input
+                  type="hidden"
+                  name="adminEmail"
+                  value="<%= user?.email ?
+                user?.email : '' %>"
+                />
+                <div class="">
+                  <label for="emailInput" class="form-label"
+                    >Email address</label
+                  >
+                  <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    id="emailInput"
+                    placeholder="name@example.com"
+                  />
+                </div>
+                <div class="">
+                  <label for="subject" class="form-label">Subject</label>
+                  <input
+                    type="text"
+                    name="subject"
+                    class="form-control"
+                    id="subject"
+                    placeholder="Email subject"
+                    value="Please fill out your AOA"
+                  />
+                </div>
+                <div class="">
+                  <label for="emailContent" class="form-label">Content</label>
+                  <textarea
+                    name="emailContent"
+                    class="form-control"
+                    id="emailContent"
+                    rows="5"
+                  >
+Please click on the following link to complete your Assignment of Accountability.</textarea
+                  >
+                  <!-- <div id="editorjs"></div> -->
+                </div>
+                <div class="">
+                  <label for="link" class="form-label">Edit Link</label>
+                  <input
+                    type="text"
+                    name="editLink"
+                    class="form-control"
+                    id="link"
+                    placeholder="Edit Link"
+                    value="<%= editLink %>"
+                  />
+                </div>
+                <div>
+                  <button
+                    type="submit"
+                    class="btn btn-primary mb-3 d-flex justify-content-around align-items-center gap-2"
+                    id="submitBtn"
+                  >
+                    Send Email
+                    <span
+                      id="loader"
+                      style="display: none"
+                      class="spinner-border spinner-border-sm"
+                    ></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main class="content" style="background-color: #4287f5">
+        <div class="container-fluid p-0">
+          <div class="row">
+            <div class="col-12">
+              <div class="col-md-10 col-xs-12" style="margin: 0 auto">
+                <div class="card">
+                  <div class="card-header">
+                    <div
+                      class="d-flex align-items-center justify-content-between gap-2"
+                    >
+                      <h5 class="card-title mb-0">Employee Details</h5>
+                      <% if(!(user?.level === "6")) {
+                      %>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#emailModal"
+                      >
+                        Send AOA
+                      </button>
+                      <% }; %>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <!-- Video Modal -->
+                    <!-- Intro Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal1"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel1"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel1">
+                              Introduction/Name/Title
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video1')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video1"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Intro-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video1')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Job description Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal2"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel2"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel2">
+                              How to fill out the "Job Description" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video2')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video2"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Job-Description-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video2')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ManagerSupervisor-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal3"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel3"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel3">
+                              How to fill out the "Manager/Supervisor" input
+                              field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video3')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video3"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/ManagerSupervisor-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video3')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Direct-Reports-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal4"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel4"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel4">
+                              How to fill out the "Direct Reports" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video4')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video4"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Direct-Reports-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video4')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Accountable-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal5"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel5"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel5">
+                              How to fill out the "Accountable" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video5')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video5"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Accountable-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video5')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Participate-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal6"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel6"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel6">
+                              How to fill out the "Participate" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video6')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video6"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Participate-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video6')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Compensation-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal7"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel7"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel7">
+                              How to fill out the "Compensation" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video7')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video7"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Compensation-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video7')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Metrics-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal8"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel8"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel8">
+                              How to fill out the "Metrics" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video8')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video8"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Metrics-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video8')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Current-Year-Positional-Objectives Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal9"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel9"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel9">
+                              How to fill out the "Current Year Positional
+                              Objectives" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video9')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video9"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Current-Year-Positional-Objectives.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video9')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Personal-Objectives-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal10"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel10"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel10">
+                              How to fill out the "Personal Objectives" input
+                              field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video10')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video10"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Personal-Objectives-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video10')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Authority-Levels-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal11"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel11"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel11">
+                              How to fill out the "Authority Levels" input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video11')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video11"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Authority-Levels-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video11')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Delegation-of-Authority-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal12"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel12"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel12">
+                              How to fill out the "Delegation of Authority"
+                              input field
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video12')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video12"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Delegation-of-Authority-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video12')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Final-Video Modal -->
+                    <div
+                      class="modal fade"
+                      id="videoModal13"
+                      tabindex="-1"
+                      aria-labelledby="videoModalLabel13"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="videoModalLabel13">
+                              Final Video
+                            </h1>
+                            <button
+                              onclick="pauseVideo('video13')"
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <div
+                              class="d-flex justify-content-center align-items-center"
+                            >
+                              <video
+                                id="video13"
+                                width="800"
+                                controls="controls"
+                              >
+                                <source
+                                  src="/videos/Final-Video.mp4"
+                                  type="video/mp4"
+                                />
+                              </video>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              onclick="pauseVideo('video13')"
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Script Modal -->
+                    <!-- Intro script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal1"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel">
+                              Introduction
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Hi, welcome to our assignment of accountability
+                            system or AOA for short. This is a great system that
+                            you're going to find very, very helpful as you think
+                            through your job role and responsibilities. The
+                            assignment of accountability is built with the
+                            purpose of helping to clarify your role, to
+                            establish your accountabilities and also to identify
+                            things like your goals and metrics and the ways in
+                            which you can perform better in your job. You'll
+                            start by answering some simple questions like your
+                            name and your title and you'll go on to a few more
+                            complicated things, for example what you&apos;re
+                            accountable for. This should probably take you about
+                            an hour to fill out, but you can do it in phases if
+                            you like. Please feel free to watch each
+                            section&apos;s intro video to learn more about that
+                            section, there are even transcripts available for
+                            you if you'd like to look at those while you're
+                            filling out questions. It will be very good for you
+                            to think through your answers thoroughly and
+                            exactly, don&apos;t overthink it either. Ironically,
+                            often your very first thoughts are the ones that
+                            matter the most. So join in with the assignment of
+                            accountability, by going through each question one
+                            at a time. Let&apos;s get started now with inputting
+                            your name and your title, your exact title into the
+                            form. Thank you very much."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- job description script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal2"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel2"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel2">
+                              How to fill out the "Job Description" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Now that you've filled out your name and your exact
+                            title, as best you know it, we'd like for you to
+                            fill out your job description. This is just a simple
+                            elevator answer. Imagine you're standing on an
+                            elevator and you meet an old friend who says, what
+                            are you doing now? So you tell them your title. And
+                            when they say, “well, what does that mean?” you give
+                            them just a brief summary of what exactly you do.
+                            That&apos;s what should go in this section. Your job
+                            description is just two or three bullets that best
+                            summarize the highest priorities that you have in
+                            your current job role. Please use simple bullet
+                            points, or use phrases, don't try to make long
+                            sentences or really elaborate explanations.
+                            Here&apos;s an example of what this might look
+                            like."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Manager supervisor script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal3"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel3"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel3">
+                              How to fill out the "Manager/Supervisor" input
+                              field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "This next section manager/supervisor is asking a
+                            simple question. Who do you report to? Who is your
+                            supervisor? Think of who would give you a
+                            performance review or a raise each year. It&apos;s
+                            possible that you may have more than one direct
+                            supervisor, depending on how your job is designed.
+                            And if you do, then please put down whoever you
+                            report to and perhaps the particular reason that you
+                            report to different people. Please enter that in
+                            this section and here&apos;s an example of what it
+                            might look like."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Direct reports script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal4"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel4"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel4">
+                              How to fill out the "Direct Reports" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Now that you've answered the question of who you
+                            report in to, then this section is asking you to
+                            enter in who reports in to you. You&apos;ll want to
+                            enter their name and their exact title. Please enter
+                            a comprehensive list of all the people that report
+                            to you, whether they might be in a different section
+                            of the organization or not. If they report to you
+                            and you do their review, then please enter it here."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Accountable script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal5"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel5"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel5">
+                              How to fill out the "Accountable" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "This next section is really the hub of the
+                            assignment of accountability, and it may take you
+                            the longest to complete, but it focuses on thinking
+                            through a very important question: what is it that
+                            you are accountable for. When we ask this question,
+                            we're defining "accountable" as: what are the set of
+                            results that you, and you alone, are in charge of
+                            accomplishing. What are the set of results that you,
+                            and you alone, are in charge of accomplishing within
+                            the organization. The goal is to enter each one here
+                            in bullet form. Oftentimes we find there might be 10
+                            or 12 different things that you might be accountable
+                            for. There's really no predefined limit for how many
+                            you can enter. But, they key is, only add them if
+                            you are the sole person accountable. An example
+                            would be for a CEO, I might be accountable for
+                            setting and communicating the mission, vision, and
+                            values of the company so that the company can
+                            deliver on our prescribed goals. That would be an
+                            example of an accountability. If I was an
+                            administrator, perhaps one of my accountabilities
+                            might be ensuring visitors have a welcoming
+                            experience and that they connect with the people
+                            that they have come to see. Those are just examples
+                            of a broad range of possible accountabilities you
+                            might add in this section. Please now enter all of
+                            the things you can think of that you, and only you,
+                            are in charge of accomplishing."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Participate script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal6"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel6"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel6">
+                              How to fill out the "Participate" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Great job completing the section on the things
+                            you're accountable for. Now we have another
+                            important question for you to answer. What are
+                            things that you participate in, that you are not
+                            accountable for the overall result? So for instance,
+                            the CFO might be accountable for developing the
+                            annual budget, but it may be very important that you
+                            give information to the CFO so that they can then
+                            use that information together with others to develop
+                            the budget. You're not accountable for the budget.
+                            The CFO is accountable for the budget, but you are
+                            accountable for giving them important information so
+                            that they can complete their accountability. So what
+                            are the things now that you need to participate in
+                            or contribute to in some way, so that they can
+                            complete what they are accountable for? Again, enter
+                            these in bullet form, but these can be described in
+                            less detail than your accountabilities. Just think
+                            of these in broad categories. So an example would be
+                            that if you're contributing to the budget, you would
+                            add a participation bullet that says “budget
+                            development” and perhaps another one that says
+                            “forecasting.” Please go ahead and enter the things
+                            you need to participate in."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Compensation script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal7"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel">
+                              How to fill out the "Compensation" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "You've completed some very important parts of our
+                            document so far, but there's more to come. And this
+                            next question is about how are you compensated? Not
+                            numbers. We're not looking for dollar amounts here.
+                            We're only looking for how you are compensated. An
+                            example might be that you're compensated with salary
+                            or maybe you&apos;re paid by the hour or by the
+                            project. In addition to that, you might receive
+                            certain bonuses throughout the year. If so, please
+                            list, the criteria for you to receive those bonuses.
+                            So you&apos;ll enter any compensation you are
+                            receiving and the details of how it can be earned
+                            right here in the compensation section. Here&apos;s
+                            an example of what that might look like."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Metrics script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal8"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel8"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel8">
+                              How to fill out the "Metrics" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "You're making great progress on your assignment of
+                            accountability. Now we want to look at some of the
+                            ways that you measure progress. First, we want to
+                            talk about metrics, the ways that you measure,
+                            quantitatively, your progress toward achieving your
+                            accountabilities. So here we're looking at areas of
+                            your work measured by numbers. For instance, if you
+                            were a salesperson, you might measure the amount of
+                            sales you made in the past month. In the case of a
+                            charity, then you might be measuring things like how
+                            many new donors did we get in the past quarter or
+                            year? If someone was in finance, you might measure
+                            progress based on the accounts receivable invoices
+                            you processed in the past quarter? So think about
+                            the ways in which you measure your progress using
+                            numbers and enter those metrics here."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Positional objectives script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal9"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel9"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="scriptModalLabel9">
+                              How to fill out the "Current Year Positional
+                              Objectives" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Now, this section focuses on the goals that have
+                            been given to you based on the position that you
+                            have for this year. Whatever goals you may have
+                            received, you will enter them here in the same
+                            bullet form that you&apos;ve used for previous
+                            questions. It's possible that you may not have
+                            received specific goals this year, and if that is
+                            the case, then you can indicate that by putting a
+                            slash in this section. So please go ahead and enter
+                            your positional objectives for your role."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Personal objectives script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal10"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel10"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1
+                              class="modal-title fs-5"
+                              id="scriptModalLabel10"
+                            >
+                              How to fill out the "Personal Objectives" input
+                              field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Now we'd like to ask you about your own personal
+                            objectives. Please enter here things that come to
+                            your mind when you answer the question, “where would
+                            I like to be in three years or five years?” This is
+                            your section for entering any personal goals and
+                            objectives that you don&apos;t mind being shared
+                            with your boss or even others on your team. You can
+                            make a request in this section to please “not
+                            share.” In which case, we will not share them any
+                            further, or we'll only share them with your boss if
+                            that&apos;s your preference. Please go ahead and
+                            enter your personal objectives and indicate your
+                            sharing preferences."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Authority script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal11"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel11"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1
+                              class="modal-title fs-5"
+                              id="scriptModalLabel11"
+                            >
+                              How to fill out the "Authority" input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "For this section called Authority Levels, you will
+                            be asked to think about what authority you&apos;ve
+                            been given in your role. For example, if you
+                            purchase things for your department, is there a
+                            limit that you&apos;re authorized to spend, beyond
+                            which, you need to ask for approval? Or, if you
+                            oversee a team, do you have authority to hire or
+                            terminate an employee? Do you work with contracts or
+                            other important paperwork where you have authority
+                            to sign things? Think through any specific areas of
+                            authority that you&apos;ve been given and enter
+                            those in this section."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- delegation script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal12"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel12"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1
+                              class="modal-title fs-5"
+                              id="scriptModalLabel12"
+                            >
+                              How to fill out the "Delegation of Authority"
+                              input field
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Good news, you're almost done. You just have one
+                            last question to answer. And the question is, as you
+                            think about your team, the people that report to
+                            you, what could you delegate to them in the coming
+                            year that is part of either your accountabilities or
+                            the things you participate in? Think about
+                            delegation as a way to teach others how to grow in
+                            their role. Now keep in mind that until your boss
+                            re-assigns an accountability, you'll still be in
+                            charge of the outcome. But someone else could do the
+                            majority of the work, take on the challenge and
+                            learn important things in the process. So please
+                            brainstorm for a minute and think about things that
+                            you're doing today that someone else could be doing
+                            if they were properly trained, given clarity about
+                            the things that needed to be done and how to do them
+                            and then given the autonomy to accomplish that work
+                            themselves. Go ahead and enter them as bulleted
+                            points within this last input field."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Final script Modal -->
+                    <div
+                      class="modal fade"
+                      id="scriptModal13"
+                      tabindex="-1"
+                      aria-labelledby="scriptModalLabel13"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1
+                              class="modal-title fs-5"
+                              id="scriptModalLabel13"
+                            >
+                              Finally review your answers
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            "Now that you've completed filling out your
+                            assignment of accountability, feel free to go back
+                            and review your answers to make sure you
+                            haven&apos;t missed anything. Often some of the
+                            later sections give you ideas for refining earlier
+                            answers. But feel free to wordsmith a few things and
+                            to get comfortable with what you've written here
+                            before you hit the submit button. When you hit
+                            submit, you'll have a chance to send a copy to
+                            yourself for further review and you'll always have a
+                            chance to go back and make some revisions. When you
+                            do that, your boss will also get a copy of your AOA
+                            and will set up a time to sit down and talk with you
+                            further about it. You&apos;ll get feedback and
+                            perhaps make some more revisions after the two of
+                            you collaborate further together. Thank you very
+                            much for taking the time to fill out your Assignment
+                            of Accountability."
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form action="/submit" method="POST">
+                      <div class="form-group">
+                        <input
+                          type="hidden"
+                          class="form-control"
+                          id="company"
+                          name="company"
+                          value="<%= id %>"
+                        />
+                        <% if(group == true) { %>
+                        <input
+                          type="hidden"
+                          class="form-control"
+                          id="group"
+                          name="group"
+                          value="<%= groupId %>"
+                        />
+
+                        <% } %>
+
+                        <!-- <label for="company" class="input-label"><i class="fas fa-building" style="margin-right: 5px;"></i>Company</label>
+										  <input type="text" class="form-control" id="company" name="company" placeholder="Enter company">
+										  <small class="form-text text-muted">
+											<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#companyModal">&#9432;</button>
+											First and company.
+										  </small> -->
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="name" class="input-label"
+                            ><i
+                              class="fas fa-user-circle"
+                              style="margin-right: 5px"
+                            ></i
+                            >Name</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal1"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal1"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          First and last name.
+                        </small>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          name="name"
+                          placeholder="Enter name"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="email" class="input-label"
+                            ><i
+                              class="fas fa-envelope"
+                              style="margin-right: 5px"
+                            ></i
+                            >Email</label
+                          >
+                        </div>
+                        <small class="form-text text-muted">
+                          Your Email Address.
+                        </small>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="email"
+                          name="email"
+                          placeholder="Enter Email"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="title" class="input-label"
+                            ><i
+                              class="fas fa-file-alt"
+                              style="margin-right: 5px"
+                            ></i
+                            >Title</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal1"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal1"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          EXACT current job title.
+                        </small>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="title"
+                          name="title"
+                          placeholder="Enter title"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="jobDescription" class="input-label"
+                            ><i
+                              class="fas fa-briefcase"
+                              style="margin-right: 5px"
+                            ></i
+                            >Job Description</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal2"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal2"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          Describe your key job responsibilities in your current
+                          position. (3-5 bulleted statements, ranked in order of
+                          importance).
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="jobDescription"
+                          name="jobDescription"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="managerSupervisor" class="input-label"
+                            ><i
+                              class="fas fa-user-tie"
+                              style="margin-right: 5px"
+                            ></i
+                            >Manager/Supervisor</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal3"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal3"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          Name and EXACT title of the one person to whom you
+                          directly report; Who is responsible for your formal
+                          performance reviews?
+                        </small>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="managerSupervisor"
+                          name="managerSupervisor"
+                          placeholder="Enter manager/supervisor"
+                          value="<%= manager ? manager?.name : '' %>"
+                          required
+                        />
+                      </div>
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="directReports" class="input-label"
+                            ><i
+                              class="fas fa-chart-bar"
+                              style="margin-right: 5px"
+                            ></i
+                            >Direct Reports</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal4"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal4"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          The names and EXACT titles of those persons who report
+                          directly to you; you are responsible for their formal
+                          performance reviews.
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="directReports"
+                          name="directReports"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="accountable" class="input-label"
+                            ><i
+                              class="fas fa-tasks"
+                              style="margin-right: 5px"
+                            ></i
+                            >Accountable</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal5"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal5"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          Areas of focus for which YOU, and ONLY YOU, are
+                          Accountable.
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="accountable"
+                          name="accountable"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="participate" class="input-label"
+                            ><i
+                              class="fas fa-hands-helping"
+                              style="margin-right: 5px"
+                            ></i
+                            >Participate</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal6"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal6"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          Activities you have responsibility to participate in
+                          but for which someone else has the “A".
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="participate"
+                          name="participate"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <!-- <div class="form-group">
+											<div class="d-flex justify-content-between align-items-center">
+												<label for="compensation" class="input-label"><i class="fas fa-money-bill-wave" style="margin-right: 5px;"></i>Compensation</label>
+												<div class="d-flex justify-content-between p-1 gap-2">
+													<button type="button" class="btn btn-light"
+													data-bs-toggle="modal" data-bs-target="#videoModal7">
+														<i class="fas fa-play-circle"></i>
+													  </button>
+													  <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#scriptModal7">
+														<i class="fas fa-file-alt"></i>
+													  </button>
+												</div>
+											  </div>
+										  <small class="form-text text-muted">
+											How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+										  </small>
+										  <textarea class="form-control" id="compensation" name="compensation" rows="3" required></textarea>
+										  
+										</div> -->
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="metrics" class="input-label"
+                            ><i
+                              class="fas fa-chart-line"
+                              style="margin-right: 5px"
+                            ></i
+                            >Metrics</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal8"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal8"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          How does your direct supervisor measure your success?
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="metrics"
+                          name="metrics"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="positionalObjectives" class="input-label"
+                            ><i
+                              class="fas fa-bullseye"
+                              style="margin-right: 5px"
+                            ></i
+                            >Current Year Positional Objectives</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal9"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal9"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          What are your key objectives for this fiscal year in
+                          your current position? These are likely objectives
+                          that are currently in written form.
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="positionalObjectives"
+                          name="positionalObjectives"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="personalObjectives" class="input-label"
+                            ><i
+                              class="fas fa-flag-checkered"
+                              style="margin-right: 5px"
+                            ></i
+                            >Personal Objectives</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal10"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal10"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          What are your personal (not positional) objectives
+                          over the next 2-3 years and beyond?
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="personalObjectives"
+                          name="personalObjectives"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="authorityLevels" class="input-label"
+                            ><i
+                              class="fas fa-user-shield"
+                              style="margin-right: 5px"
+                            ></i
+                            >Authority Levels</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal11"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal11"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          What authority levels or decision rights do you have
+                          for planning, spending, hiring/firing, contractual
+                          relationships, structural changes, etc.?
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="authorityLevels"
+                          name="authorityLevels"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <div
+                          class="d-flex justify-content-between align-items-center"
+                        >
+                          <label for="delegationOfAuthority" class="input-label"
+                            ><i
+                              class="fas fa-users-cog"
+                              style="margin-right: 5px"
+                            ></i
+                            >Delegation of Authority</label
+                          >
+                          <div class="d-flex justify-content-between p-1 gap-2">
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#videoModal12"
+                            >
+                              <i class="fas fa-play-circle"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              data-bs-toggle="modal"
+                              data-bs-target="#scriptModal12"
+                            >
+                              <i class="fas fa-file-alt"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <small class="form-text text-muted">
+                          What freedom do you give to your subordinates to make
+                          decisions on their own, e.g. authority levels,
+                          requesting permission, submitting data, etc. Think
+                          about which of your accountabilities you might be able
+                          to delegate.
+                        </small>
+                        <textarea
+                          class="form-control"
+                          id="delegationOfAuthority"
+                          name="delegationOfAuthority"
+                          rows="3"
+                          required
+                        ></textarea>
+                      </div>
+
+                      <!-- Add more fields with the "i" button functionality here -->
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div class="d-flex justify-content-between p-1 gap-2">
+                          <button
+                            type="button"
+                            class="btn btn-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#videoModal13"
+                          >
+                            <i class="fas fa-play-circle"></i>
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#scriptModal13"
+                          >
+                            <i class="fas fa-file-alt"></i>
+                          </button>
+                        </div>
+                        <button
+                          type="submit"
+                          id="formSubmit"
+                          class="btn btn-primary btn-block"
+                          style="float: right"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- <script src="/js/app.js"></script> -->
+    <!-- tiptap editor for email  -->
+
+    <script>
+      // pause the video when click on close button
+      function pauseVideo(videoId) {
+        const video = document.getElementById(videoId);
+
+        if (video.play) {
+          video.pause();
+        }
+      }
+    </script>
+    <script type="module">
+      // loader while sending email
+      function showLoading(state) {
+        const submitBtn = document.getElementById("submitBtn");
+        const loader = document.getElementById("loader");
+        if (state === true) {
+          loader.style.display = "block";
+          submitBtn.disabled = true;
+        } else {
+          loader.style.display = "none";
+          submitBtn.disabled = false;
+        }
+      }
+
+      import { Editor } from "https://esm.sh/@tiptap/core";
+      import StarterKit from "https://esm.sh/@tiptap/starter-kit";
+
+      const editor = new Editor({
+        element: document.querySelector("#editorjs"),
+        editorProps: {
+          attributes: {
+            class: "border border-2 p-2 rounded-2",
+          },
+        },
+        extensions: [StarterKit],
+        content: `<p> Please click on the following link to complete your Assignment of Accountability: <a target='_blank' href='<%= editLink%>'>Edit Link</a> </p>`,
+      });
+
+      // send email to the address
+      document
+        .getElementById("send-aoa-link-form")
+        .addEventListener("submit", function sendEmail(event) {
+          event.preventDefault();
+          const form = event.target;
+
+          const data = {
+            email: form.email.value,
+            adminEmail: form.adminEmail.value,
+            compId: form.compId.value,
+            groupId: form.groupId.value,
+            subject: form.subject.value,
+            content: form.emailContent.value,
+            editLink: form.editLink.value,
+          };
+
+          const jsonData = JSON.stringify(data);
+
+          // Send a POST request to /send-aoa-link
+          showLoading(true);
+          fetch("/send-aoa-link", {
+            method: "POST",
+            body: jsonData,
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              // You can parse the response if needed
+              showLoading(false);
+              // success toast open
+              const toastSuccess = document.getElementById("successToast");
+              const toastBootstrap =
+                bootstrap.Toast.getOrCreateInstance(toastSuccess);
+              toastBootstrap.show();
+            })
+            .then((data) => {
+              // Handle the response data here (if needed)
+              console.log(new Date(), "Response data:", data);
+            })
+            .catch((error) => {
+              showLoading(false);
+              console.error("Error sending revision data:", error);
+              const errorElement = document.querySelector(".error");
+              errorElement.innerText = "ERROR!!   :" + error;
+              const modal = document.getElementById("errorModal");
+              const bootstrapModal = new bootstrap.Modal(modal);
+              bootstrapModal.show();
+            });
+        });
+    </script>
+  </body>
+</html>

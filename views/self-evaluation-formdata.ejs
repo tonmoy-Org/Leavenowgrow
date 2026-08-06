@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Self-evaluation Form</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- bootstrap 5.3 cdn  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      label {
+        font-weight: 600;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+
+  <body style="background-color: #4287f5">
+    <div class="wrapper">
+      <div class="main p-lg-5 p-2">
+        <main class="content">
+          <div class="container-fluid">
+            <div
+              class="modal fade"
+              id="videoModal1"
+              tabindex="-1"
+              aria-labelledby="videoModalLabel1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="videoModalLabel1">
+                      Introduction
+                    </h1>
+                    <button
+                      onclick="pauseVideo('video1')"
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <video id="video1" width="800" controls="controls">
+                        <source
+                          src="/videos/Self-Evaluation-Intro-Video.mp4"
+                          type="video/mp4"
+                        />
+                      </video>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      onclick="pauseVideo('video1')"
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- employee original AOA  -->
+              <div class="col-lg-6 col-md-12">
+                <div class="col-12" style="margin: 0 auto">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-light">
+                          <i class="fas fa-user"></i>
+                        </button>
+                        <h5 class="card-title mb-0">Original employee AOA</h5>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group"></div>
+                        <div class="form-group mb-4">
+                          <label for="name" class="input-label">Name</label>
+                          <small class="d-block form-text text-muted">
+                            First and last name.
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            name="name"
+                            placeholder="Enter name"
+                            value="<%= formData.name %>"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="title" class="input-label">Title</label>
+                          <small class="d-block form-text text-muted">
+                            EXACT current job title.
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="title"
+                            name="title"
+                            placeholder="Enter title"
+                            value="<%= formData.title %>"
+                          />
+                        </div>
+                        <div class="form-group mb-2">
+                          <label for="jobDescription" class="input-label"
+                            >Job Description</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Describe your key job responsibilities in your
+                            current position. (3-5 bulleted statements, ranked
+                            in order of importance).
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="jobDescription"
+                            name="jobDescription"
+                            rows="3"
+                          >
+<%= formData?.jobDescription ? formData?.jobDescription.trim() : "" %></textarea
+                          >
+                        </div>
+                        <div class="form-group mb-4 pb-1">
+                          <label for="managerSupervisor" class="input-label"
+                            >Manager/Supervisor</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Name and EXACT title of the one person to whom you
+                            directly report; Who is responsible for your formal
+                            performance reviews?
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="managerSupervisor"
+                            name="managerSupervisor"
+                            placeholder="Enter manager/supervisor"
+                            value="<%= formData.managerSupervisor %>"
+                          />
+                        </div>
+                        <div class="form-group mb-4">
+                          <label for="directReports" class="input-label"
+                            >Direct Reports</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            The names and EXACT titles of those persons who
+                            report directly to you; you are responsible for
+                            their formal performance reviews.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="directReports"
+                            name="directReports"
+                            rows="3"
+                          >
+<%= formData?.directReports ? formData?.directReports.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group mb-3">
+                          <label for="accountable" class="input-label"
+                            >Accountable</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Areas of focus for which YOU, and ONLY YOU, are
+                            Accountable.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="accountable"
+                            name="accountable"
+                            rows="3"
+                          >
+<%= formData?.accountable ? formData?.accountable.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group mb-4 pb-3">
+                          <label for="participate" class="input-label"
+                            >Participate</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Activities you have responsibility to participate in
+                            but for which someone else has the “A".
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="participate"
+                            name="participate"
+                            rows="3"
+                          >
+<%= formData?.participate ? formData?.participate.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <!-- <div class="form-group mb-5">
+                        <label for="compensation" class="input-label">Compensation</label>
+                        <small class="d-block form-text text-muted">
+                          How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+                        </small>
+                        <textarea class="form-control" id="compensation" name="compensation" rows="3"><%= formData?.compensation ? formData?.compensation : "" %></textarea>
+                        
+                      </div> -->
+
+                        <div class="form-group">
+                          <label for="metrics" class="input-label"
+                            >Metrics</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            How does your direct supervisor measure your
+                            success?
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="metrics"
+                            name="metrics"
+                            rows="3"
+                          >
+<%= formData?.metrics ? formData?.metrics.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group mb-4 pb-1">
+                          <label for="positionalObjectives" class="input-label"
+                            >Current Year Positional Objectives</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            What are your key objectives for this fiscal year in
+                            your current position? These are likely objectives
+                            that are currently in written form.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="positionalObjectives"
+                            name="positionalObjectives"
+                            rows="3"
+                          >
+<%= formData?.positionalObjectives ? formData?.positionalObjectives.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label"
+                            >Personal Objectives</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            What are your personal (not positional) objectives
+                            over the next 2-3 years and beyond?
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="personalObjectives"
+                            name="personalObjectives"
+                            rows="3"
+                          >
+<%= formData?.personalObjectives ? formData?.personalObjectives.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label"
+                            >Authority Levels</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            What authority levels or decision rights do you have
+                            for planning, spending, hiring/firing, contractual
+                            relationships, structural changes, etc.?
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="authorityLevels"
+                            name="authorityLevels"
+                            rows="3"
+                          >
+<%= formData?.authorityLevels ? formData?.authorityLevels.trim() : "" %></textarea
+                          >
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label"
+                            >Delegation of Authority</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            What freedom do you give to your subordinates to
+                            make decisions on their own, e.g. authority levels,
+                            requesting permission, submitting data, etc. Think
+                            about which of your accountabilities you might be
+                            able to delegate.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="delegationOfAuthority"
+                            name="delegationOfAuthority"
+                            rows="3"
+                          >
+<%= formData?.delegationOfAuthority ? formData?.delegationOfAuthority.trim() : "" %></textarea
+                          >
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- self evaluation form  -->
+              <div class="col-lg-6 col-md-12">
+                <div class="col-12" style="margin: 0 auto">
+                  <div class="card">
+                    <div
+                      class="card-header d-flex justify-content-between align-items-center"
+                    >
+                      <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-sm btn-light">
+                          <i class="fas fa-user"></i>
+                        </button>
+                        <h5 class="card-title mb-0">Self-evaluation Form</h5>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-link"
+                          data-bs-toggle="modal"
+                          data-bs-target="#videoModal1"
+                          id="video-modal-button"
+                        >
+                          Click Here for Instructions
+                          <i class="fas fa-play-circle"></i>
+                        </button>
+                      </div>
+                      <span class="fw-semibold m-0"
+                        ><%= selfData?.quarter %>, <%= selfData?.year %></span
+                      >
+                    </div>
+                    <div class="card-body">
+                      <form
+                        action="/self-evaluation-edit-form/submit/<%= selfData?._id %>"
+                        method="POST"
+                      >
+                        <div class="form-group">
+                          <label for="name" class="input-label">Name</label>
+                          <small class="d-block form-text text-muted">
+                            First and last name.
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            name="name"
+                            placeholder="Enter name"
+                            value="<%= formData.name %>"
+                            readonly
+                          />
+                        </div>
+                        <div class="form-group mb-4">
+                          <label for="title" class="input-label">Title</label>
+                          <small class="d-block form-text text-muted">
+                            What is your current title?
+                          </small>
+                          <small class="d-block form-text text-muted">
+                            Does your title an accurate reflection of your
+                            current responsibilities?
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="title"
+                            name="title"
+                            placeholder="Enter title"
+                            value=""
+                          />
+                        </div>
+                        <div class="form-group mb-4">
+                          <label for="jobDescription" class="input-label"
+                            >Job Description</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Is your job description still accurate?
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="jobDescription"
+                            name="jobDescription"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group mb-4">
+                          <label for="managerSupervisor" class="input-label"
+                            >Manager/Supervisor</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Your immediate supervisor
+                          </small>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="managerSupervisor"
+                            name="managerSupervisor"
+                            placeholder="Enter manager/supervisor"
+                            value=""
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="directReports" class="input-label"
+                            >Direct Reports</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Have your Direct Reports changed during this past
+                            review period?
+                          </small>
+                          <small class="d-block form-text text-muted">
+                            What changes have occurred? (note V=Voluntary,
+                            I=Involuntary)
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="directReports"
+                            name="directReports"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="accountable" class="input-label"
+                            >Accountable</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            How have you performed against the stated
+                            accountabilities? Please give 2-3 examples of how
+                            you have been successful in completing your key
+                            Accountabilities.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="accountable"
+                            name="accountable"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group mb-4">
+                          <label for="participate" class="input-label"
+                            >Participate</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            How have you performed against the stated assigned
+                            Participation? Please give 2-3 examples of how you
+                            have helped others successfully complete their
+                            Accountabilities.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="participate"
+                            name="participate"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <!-- <div class="form-group mb-4">
+                        <label for="compensation" class="input-label">Compensation</label>
+                        <small class="d-block form-text text-muted">
+                          This area may be discussed privately with your manager during your Periodic Performance Discussion.
+                        </small>
+                        <textarea class="form-control" id="compensation" name="compensation" rows="3"></textarea>
+                        
+                      </div> -->
+
+                        <div class="form-group mb-4">
+                          <label for="metrics" class="input-label"
+                            >Metrics</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Please report the quantitative results of your
+                            assigned metrics for the past 12 months. If you
+                            cannot track the previous 12 months on a metric,
+                            please use the most current period.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="metrics"
+                            name="metrics"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="positionalObjectives" class="input-label"
+                            >Current Year Positional Objectives</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Please rate your performance of each of your
+                            assigned objectives for this current period (from 1
+                            to 5)
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="positionalObjectives"
+                            name="positionalObjectives"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label"
+                            >Personal Objectives</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Please comment on your progress (or lack of
+                            progress) on your personal objectives.
+                          </small>
+                          <small class="d-block form-text text-muted">
+                            How have your personal objectives changed over the
+                            previous review period?
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="personalObjectives"
+                            name="personalObjectives"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label"
+                            >Authority Levels</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            Please comment on your current level of Authority
+                            and how it impacts (positively or negatively) your
+                            ability to complete your Accountabilities.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="authorityLevels"
+                            name="authorityLevels"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label"
+                            >Delegation of Authority</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            What activities or responsibilities have you
+                            delegated to one of your Direct Reports over the
+                            course of the previous review period. Be specific
+                            regarding what you delegated and rate each one ( 1
+                            to 5) on how the individual performed with that
+                            specific delegated responsibility.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="delegationOfAuthority"
+                            name="delegationOfAuthority"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="managerReview" class="input-label"
+                            >Manager Review</label
+                          >
+                          <small class="d-block form-text text-muted">
+                            2 things my manager is doing well that support my
+                            success and two areas that could be improved to
+                            better support me.
+                          </small>
+                          <textarea
+                            class="form-control"
+                            id="managerReview"
+                            name="managerReview"
+                            rows="3"
+                          ></textarea>
+                        </div>
+
+                        <!-- Add more fields with the "i" button functionality here -->
+                        <button
+                          type="submit"
+                          id="formSubmit"
+                          class="btn btn-primary btn-block mt-2"
+                          style="float: right"
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("video-modal-button").click();
+      });
+    </script>
+    <script>
+      // pause the video when click on close button
+      function pauseVideo(videoId) {
+        const video = document.getElementById(videoId);
+
+        if (video.play) {
+          video.pause();
+        }
+      }
+    </script>
+  </body>
+</html>

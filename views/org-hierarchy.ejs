@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Accountability</title>
+
+    <!-- Admin Kit CSS File  -->
+    <link href="css/app.css" rel="stylesheet" />
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    /> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    .rounded-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .border {
+      border: 2px solid #f00; /* 2px solid red border */
+    }
+    .spinner-loader {
+      border: 4px solid #1e5c99;
+      border-radius: 50%;
+      border-top: 4px solid transparent;
+      width: 16px;
+      height: 16px;
+      -webkit-animation: spin 1s linear infinite; /* Safari */
+      animation: spin 1s linear infinite;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "dashboard" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <h3 class="fs-3 fw-semibold mb-3">Organizational Hierarchy</h3>
+
+            <!-- org chart  -->
+            <div class="row m-0">
+              <div class="card">
+                <!-- <div class="card-header">Organizational Hierarchy</div> -->
+                <div class="card-body">
+                  <div class="mb-4">
+                    <label class="form-label" for="select-company"
+                      >Select a company</label
+                    >
+                    <select
+                      onchange="getCompaniesOrgChart(event)"
+                      class="form-select"
+                      name="company"
+                      id="select-company"
+                    >
+                      <option value="">Choose a company</option>
+                      <% companies?.forEach(function(item) { %>
+                      <option value="<%= item?._id %>">
+                        <%= item?.name %>
+                      </option>
+                      <% }) %>
+                    </select>
+                  </div>
+                  <div
+                    id="org-tree"
+                    style="width: 100%; height: 100%; display: block"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/apextree"></script>
+    <!-- Admin Kit JS File  -->
+    <script src="/js/app.js"></script>
+
+    <script>
+      let orgData;
+
+      function renderOrgChart(data, width) {
+        const options = {
+          width: width,
+          height: 500,
+          contentKey: "data",
+          nodeWidth: 500,
+          nodeHeight: 200,
+          nodeBGColor: "#fefefe",
+          nodeBGColorHover: "#f1f1f1",
+          borderColor: "#333",
+          childrenSpacing: 50,
+          siblingSpacing: 20,
+          direction: "top",
+          enableExpandCollapse: true,
+          nodeTemplate: (content) =>
+            `<div style='padding: 16px;height: 100%;'>
+              <div>
+                ${
+                  content?.companyOrGroup
+                    ? `<p style='font-size: 24px;width: 100%; margin-bottom: 4px;padding: 2px 6px;background-color: #3b7ddd;color: #fff;text-align: center;'>${content?.companyOrGroup}</p>`
+                    : ""
+                }
+                </div>
+          <div style='display: flex;gap: 10px;justify-content: center;align-items: flex-start;'> 
+            <img style='width: 120px;height: 120px;border-radius: 25%;' src='${
+              content?.profilePic ?? "/img/avatars/user-dummy.avif"
+            }' alt='' />
+          <div style="width: 100%;font-weight: bold; font-family: Poppins; font-size: 16px">
+            <p style="width: 100%; margin-bottom: 4px;padding: 2px 6px;background-color: #1E5C99;color: #fff;text-align: center">${
+              content?.name
+            }</p>
+            <p style="width: 100%; margin-bottom: 4px;padding: 2px 6px;background-color: #CECECE;color: #222;text-align: center">${
+              content?.title
+            }</p>
+            <div class="d-flex align-items-center justify-content-evenly gap-2">
+              ${
+                content?.type === "company"
+                  ? `<a href='/admin/${content?.id}/view' target='_blank' class="btn btn-primary rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye align-middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+              <a href='/goals-worksheet/view/${content?.id}' target='_blank' class="btn btn-success rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-target align-middle"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></a>
+              <a href='/formadmin/${content?.id}' target='_blank' class="btn btn-info rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus align-middle"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg></a>
+              <a href='/goals-worksheet/${content?.id}' target='_blank' class="btn btn-warning rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-plus align-middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg></a>`
+                  : content?.type === "group"
+                  ? `<a href='/group-admin/view/${content?.id}' target='_blank' class="btn btn-primary rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye align-middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+              <a href='/group-formadmin/${content?.id}' target='_blank' class="btn btn-success rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus align-middle"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg></a>`
+                  : `<a href='/edit-form/${content?.id}' target='_blank' class="btn btn-primary rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit align-middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></a>
+              <a href='/all-evaluations/${content?.id}' target='_blank' class="btn btn-success rounded-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text align-middle"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></a>`
+              }
+              
+            </div>
+          </div>
+            </div>
+         </div>`,
+          canvasStyle: "background: #fff;border: 1px solid #f1f1f1;",
+          enableToolbar: true,
+        };
+
+        const orgTree = document.getElementById("org-tree");
+        orgTree.innerHTML = "";
+
+        const tree = new ApexTree(orgTree, options);
+        tree.render(data);
+      }
+
+      function updateElementWidth(width) {
+        if (width < 400) {
+          // 300, 500
+          return 240;
+        } else if (width >= 400 && width < 600) {
+          // 300, 500
+          return 300;
+        } else if (width >= 600 && width < 1281) {
+          // 500, 500
+          return 500;
+        } else if (width >= 1281 && width < 1440) {
+          // 500, 500
+          return 700;
+        } else {
+          // 900, 500
+          return 900;
+        }
+      }
+
+      window.addEventListener("resize", () => {
+        const newWidth = window.innerWidth;
+        updateElementWidth(newWidth);
+        const width = updateElementWidth(newWidth);
+
+        renderOrgChart(orgData, width);
+      });
+
+      function getCompaniesOrgChart(event) {
+        const companyId = event.target.value;
+
+        fetch(`/get/companies/${companyId}`)
+          .then((res) => res.json())
+          .then((resData) => {
+            orgData = resData?.data;
+
+            const browserWidth = window.innerWidth;
+            const width = updateElementWidth(browserWidth);
+
+            renderOrgChart(orgData, width);
+          });
+      }
+    </script>
+  </body>
+</html>

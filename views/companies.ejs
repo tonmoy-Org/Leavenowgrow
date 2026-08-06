@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Companies</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .draggable-row {
+        cursor: grab;
+      }
+
+      .rounded-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      /* mouse over link */
+      .company-admin-link:hover {
+        color: hotpink;
+      }
+
+      /* selected link */
+      .company-admin-link:active {
+        color: blue;
+      }
+      .cursor_pointer {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "companies" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div class="row pb-2">
+              <div class="col-md-4 col-xs-12 col-sm-12">
+                <h1 class="h3 mb-3">Companies</h1>
+                <% if(company?._id) { %>
+                <div class="d-flex align-items-center justify-content-center">
+                  <a
+                    href="/goals-worksheet/company/view/<%= company?._id %>"
+                    role="button"
+                    class="rounded-button btn btn-success"
+                    title="Goals Worksheet View"
+                  >
+                    <i class="fas fa-clipboard-list"></i>
+                  </a>
+                  <a
+                    href="/goals-worksheet/<%= company?._id %>"
+                    role="button"
+                    class="rounded-button btn btn-secondary"
+                    title="Goals Worksheet"
+                  >
+                    <i class="align-middle" data-feather="file-plus"></i>
+                  </a>
+                </div>
+                <% } %>
+              </div>
+              <div class="col-md-8 col-xs-12 col-sm-12">
+                <button
+                  class="btn btn-primary rounded-button float-end"
+                  type="submit"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-modal"
+                  title="Add Company"
+                >
+                  <i class="align-middle" data-feather="plus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                <div class="card flex-fill">
+                  <div class="card-header"></div>
+                  <div
+                    class="table-responsive"
+                    style="max-height: 900px; max-width: 100%; overflow: auto"
+                  >
+                    <table class="table table-hover my-0">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Employee View</th>
+                          <!-- <th>Form Link</th> -->
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% companies.forEach(function(company, index) { %>
+                        <tr id="row<%= company._id %>">
+                          <td
+                            class="cursor_pointer"
+                            onclick="toggleSubgroups('<%= company._id %>')"
+                          >
+                            <%= index + 1 %>
+                          </td>
+                          <td
+                            class="cursor_pointer"
+                            onclick="toggleSubgroups('<%= company._id %>')"
+                          >
+                            <%= company.name %>
+                          </td>
+                          <td class="">
+                            <div class="d-flex align-items-center gap-2">
+                              <a
+                                href="/admin/<%= company._id %>/view"
+                                role="button"
+                                class="rounded-button btn btn-primary"
+                                title="Company View"
+                              >
+                                <i class="align-middle" data-feather="eye"></i>
+                              </a>
+                              <a
+                                href="/goals-worksheet/company/view/<%= company?._id %>"
+                                role="button"
+                                class="rounded-button btn btn-success"
+                                title="Goals Worksheet View"
+                              >
+                                <i class="fas fa-clipboard-list"></i>
+                              </a>
+                            </div>
+                          </td>
+
+                          <!-- <td>
+                            <div class="d-flex align-items-center gap-2">
+                              <a
+                                href="/formadmin/<%= company?._id %>"
+                                role="button"
+                                class="rounded-button btn btn-info"
+                                title="AOA Submission"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="user-plus"
+                                ></i>
+                              </a>
+                              <a
+                                href="/goals-worksheet/<%= company?._id %>"
+                                role="button"
+                                class="rounded-button btn btn-secondary"
+                                title="Goals Worksheet"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="file-plus"
+                                ></i>
+                              </a>
+                            </div>
+                          </td> -->
+
+                          <td class="">
+                            <div
+                              class="d-flex align-items-start justify-content-start gap-2"
+                            >
+                              <button
+                                type="button"
+                                class="rounded-button btn btn-info"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal<%= company._id %>"
+                                title="Edit Company Data"
+                              >
+                                <i class="align-middle" data-feather="edit"></i>
+                              </button>
+                              <button
+                                type="button"
+                                class="rounded-button btn btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal<%= company._id %>"
+                                title="Delete Company"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="trash"
+                                ></i>
+                              </button>
+                            </div>
+                          </td>
+
+                          <td></td>
+                        </tr>
+
+                        <!-- Subgroup rows -->
+                        <tr
+                          id="subgroups<%= company._id %>"
+                          class="subgroup-row"
+                          style="display: none"
+                        >
+                          <td></td>
+                          <!-- Empty cell for spacing -->
+                          <td colspan="4">
+                            <table class="table table-hover my-0">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Group Name</th>
+                                  <th>Employee View</th>
+                                  <!-- <th>Form Link</th> -->
+                                  <th>Actions</th>
+                                  <!-- Add additional sub-group headers here -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% company.subGroup.forEach(function(subgroup,
+                                subIndex) { %>
+                                <tr>
+                                  <td><%= subIndex + 1 %></td>
+                                  <td><%= subgroup.name %></td>
+                                  <td
+                                    class="d-flex align-items-center justify-content-start gap-2"
+                                  >
+                                    <a
+                                      href="/group-admin/view/<%= subgroup._id %>"
+                                      role="button"
+                                      class="rounded-button btn btn-primary"
+                                      title="Group View"
+                                      ><i class="fas fa-eye"></i
+                                    ></a>
+                                    <a
+                                      href="/goals-worksheet/group/view/<%= subgroup._id %>"
+                                      role="button"
+                                      class="rounded-button btn btn-success"
+                                      title="Goals Worksheet View"
+                                      ><i class="fas fa-clipboard-list"></i
+                                    ></a>
+                                  </td>
+
+                                  <!-- <td>
+                                    <a
+                                      href="/group-formadmin/<%= subgroup._id %>"
+                                      role="button"
+                                      class="rounded-button btn btn-info"
+                                      title="AOA Submission"
+                                    >
+                                      <i
+                                        class="align-middle"
+                                        data-feather="user-plus"
+                                      ></i>
+                                    </a>
+                                  </td> -->
+
+                                  <td class="">
+                                    <div
+                                      class="d-flex align-items-start justify-content-start gap-2"
+                                    >
+                                      <button
+                                        type="button"
+                                        class="rounded-button btn btn-info"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editGroupModal<%= subgroup._id %>"
+                                        title="Edit Group Data"
+                                      >
+                                        <i
+                                          class="align-middle"
+                                          data-feather="edit"
+                                        ></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        class="rounded-button btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#confirmDeleteGroupModal<%= subgroup._id %>"
+                                        title="Delete Group"
+                                      >
+                                        <i
+                                          class="align-middle"
+                                          data-feather="trash"
+                                        ></i>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <!--Group  Modal -->
+                                <div
+                                  class="modal fade"
+                                  id="editGroupModal<%= subgroup._id %>"
+                                  tabindex="-1"
+                                  aria-labelledby="exampleModalLabel"
+                                  aria-hidden="true"
+                                >
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5
+                                          class="modal-title"
+                                          id="exampleModalLabel"
+                                        >
+                                          Edit Group
+                                        </h5>
+                                        <button
+                                          type="button"
+                                          class="btn-close"
+                                          data-bs-dismiss="modal"
+                                          aria-label="Close"
+                                        ></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form
+                                          action="/edit-group-name"
+                                          method="POST"
+                                        >
+                                          <input
+                                            type="hidden"
+                                            value="<%= subgroup._id %>"
+                                            name="groupId"
+                                          />
+                                          <div class="form-group">
+                                            <label
+                                              for=""
+                                              class="input-label"
+                                              style="margin-bottom: 5px"
+                                              >Group Name</label
+                                            >
+                                            <input
+                                              type="text"
+                                              class="form-control"
+                                              value="<%= subgroup.name %>"
+                                              name="groupName"
+                                              required
+                                            />
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button
+                                              type="button"
+                                              class="btn btn-secondary"
+                                              data-bs-dismiss="modal"
+                                            >
+                                              Close
+                                            </button>
+                                            <button
+                                              type="submit"
+                                              class="btn btn-primary"
+                                            >
+                                              Save changes
+                                            </button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <!-- Confirm delete Group modal-->
+                                <div
+                                  class="modal fade"
+                                  id="confirmDeleteGroupModal<%= subgroup._id %>"
+                                  tabindex="-1"
+                                  aria-labelledby="exampleModalLabel"
+                                  aria-hidden="true"
+                                >
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5
+                                          class="modal-title"
+                                          id="exampleModalLabel"
+                                        >
+                                          Confirm Delete
+                                        </h5>
+                                        <button
+                                          type="button"
+                                          class="btn-close"
+                                          data-bs-dismiss="modal"
+                                          aria-label="Close"
+                                        ></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <h6>
+                                          Are you sure you want to delete <%=
+                                          subgroup.name %>
+                                        </h6>
+                                      </div>
+
+                                      <div class="modal-footer">
+                                        <a
+                                          href="/delete-group/<%= subgroup._id %>"
+                                          type="submit"
+                                          class="btn btn-danger"
+                                          >Delete
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <% }) %>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Modal -->
+                        <div
+                          class="modal fade"
+                          id="editModal<%= company._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Edit Company
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/edit-company-name" method="POST">
+                                  <input
+                                    type="hidden"
+                                    value="<%= company._id %>"
+                                    name="companyId"
+                                  />
+                                  <div class="form-group">
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Company Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      value="<%= company.name %>"
+                                      name="companyName"
+                                      required
+                                    />
+                                  </div>
+                                  <div class="mt-4">
+                                    <p>
+                                      Current Admin: <%= company?.user_id?.name
+                                      %>
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Change Admin</label
+                                    >
+                                    <select
+                                      class="form-control"
+                                      name="user_id"
+                                      required
+                                    >
+                                      <option value="">
+                                        --Choose new Admin--
+                                      </option>
+                                      <% admins.forEach((admin, index) => { %>
+                                      <option value="<%= admin._id %>">
+                                        <%= admin.name %>
+                                      </option>
+                                      <% }) %>
+                                    </select>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Confirm delete modal-->
+                        <div
+                          class="modal fade"
+                          id="confirmDeleteModal<%= company._id %>"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Confirm Delete
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <h6>
+                                  Are you sure you want to delete <%=
+                                  company.name %>
+                                </h6>
+                              </div>
+
+                              <div class="modal-footer">
+                                <a
+                                  href="/delete/<%= company._id %>"
+                                  type="submit"
+                                  class="btn btn-danger"
+                                  >Delete
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% }) %>
+
+                        <!-- Add Modal -->
+                        <div
+                          class="modal fade"
+                          id="add-modal"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">
+                                  Add Company
+                                </h5>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/submit_admin" method="POST">
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Name</label
+                                    >
+                                    <input
+                                      type="text"
+                                      class="form-control"
+                                      name="name"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div
+                                    class="form-group"
+                                    style="margin-bottom: 10px"
+                                  >
+                                    <label
+                                      for=""
+                                      class="input-label"
+                                      style="margin-bottom: 5px"
+                                      >Admin</label
+                                    >
+                                    <select
+                                      class="form-control"
+                                      name="user_id"
+                                      required
+                                    >
+                                      <option value="">--Select Admin--</option>
+                                      <% admins.forEach((admin, index) => { %>
+                                      <option value="<%= admin._id %>">
+                                        <%= admin.name %>
+                                      </option>
+                                      <% }) %>
+                                    </select>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      data-bs-dismiss="modal"
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      class="btn btn-primary"
+                                    >
+                                      Save changes
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script>
+      function toggleSubgroups(companyId) {
+        const subgroupsRow = document.getElementById(`subgroups${companyId}`);
+        if (subgroupsRow.style.display === "none") {
+          subgroupsRow.style.display = "table-row";
+        } else {
+          subgroupsRow.style.display = "none";
+        }
+      }
+    </script>
+
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@1.0.0/html-docx.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        var defaultDate =
+          date.getUTCFullYear() +
+          "-" +
+          (date.getUTCMonth() + 1) +
+          "-" +
+          date.getUTCDate();
+        document.getElementById("datetimepicker-dashboard").flatpickr({
+          inline: true,
+          prevArrow: '<span title="Previous month">&laquo;</span>',
+          nextArrow: '<span title="Next month">&raquo;</span>',
+          defaultDate: defaultDate,
+        });
+      });
+
+      document
+        .getElementById("downloadButton")
+        .addEventListener("click", function () {
+          // Gather checked values of header checkboxes
+          const headerCheckboxes = document.querySelectorAll(
+            ".header-checkbox:checked"
+          );
+          const headerValues = Array.from(headerCheckboxes).map(
+            (checkbox) => checkbox.dataset.column
+          );
+
+          window.location.href = `/admin/download/${headerValues}`;
+        });
+    </script>
+  </body>
+</html>

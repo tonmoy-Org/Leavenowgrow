@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Employees</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      window.addEventListener("DOMContentLoaded", async function () {
+        const comId = `<%= company %>`;
+        var savedColumnOrder = await fetchColumnOrder(comId);
+
+        // localStorage.getItem("columnOrder");
+
+        if (savedColumnOrder) {
+          var columnOrder = savedColumnOrder;
+
+          // Reorder the columns based on the saved order
+          var table = document.getElementById("sortableTable");
+
+          var headerRows = table.querySelectorAll("thead tr , tbody tr");
+
+          for (var i = 0; i < columnOrder.length; i++) {
+            var columnId = columnOrder[i];
+            headerRows.forEach(function (row) {
+              var headerCell = row.querySelector(
+                "td[id='" + columnId + "'], th[id='" + columnId + "']"
+              );
+              if (headerCell) {
+                row.appendChild(headerCell);
+              }
+            });
+          }
+        }
+      });
+    </script>
+
+    <style>
+      .rounded-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      }
+
+      .check-all {
+        display: flex;
+        left: 0;
+        justify-content: flex-end;
+        top: 0;
+        height: 2rem;
+        width: 100%;
+        align-items: flex-start;
+      }
+
+      .check-all > label {
+        font-size: 0.6rem;
+        margin-left: 0.3rem;
+      }
+
+      .downloadOptions ul li {
+        cursor: pointer;
+      }
+
+      .downloadOptions ul li:hover {
+        color: #dc3545;
+      }
+
+      .table-responsive {
+        height: calc(100vh - 200px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "companies" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content" style="margin-top: 1px; padding-top: 10px">
+          <div class="container-fluid p-0">
+            <div class="dropdown">
+              <a
+                class="btn btn-secondary dropdown-toggle"
+                href="#"
+                role="button"
+                id="dropdownMenuLink"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Employees View
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <% if(comp) { %>
+                  <li><a class="dropdown-item" href="/admin/<%= company %>/view">AOAs</a></li>
+                  <li><a class="dropdown-item" href="/goals-worksheet/company/view/<%= company %>">Goals Worksheets</a></li>
+                <% } else { %>
+                  <li><a class="dropdown-item" href="/group-admin/view/<%= company %>">AOAs</a></li>
+                  <li><a class="dropdown-item" href="/goals-worksheet/group/view/<%= company %>">Goals Worksheets</a></li>
+                <% } %>
+              </ul>
+            </div>
+            <div class="row py-2">
+              <div class="col-6">
+                <h1 class="h3 mb-3">AOAs</h1>
+              </div>
+              <div class="col-6" style="position: relative">
+                <div class="float-end d-flex align-items-center gap-2">
+                  <% if(user) { %> <% if((user?.level == "Super Admin" || user?.level == "1") &&
+                  comp) { %>
+                  <a
+                    href="/formadmin/<%= company %>"
+                    target="_blank"
+                    class="btn btn-dark btn-lg rounded-button"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="New Employee Form"
+                    role="button"
+                    ><i class="align-middle" data-feather="link-2"></i
+                  ></a>
+                  <% } %> <% if(!comp) { %>
+                  <a
+                    href="/group-formadmin/<%= company %>"
+                    target="_blank"
+                    class="btn btn-primary btn-lg rounded-button"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="New Employee Form"
+                    role="button"
+                    ><i class="align-middle" data-feather="link-2"></i
+                  ></a>
+                  <% } %> <% } %> <% if(user) { %> <% if(user.role==2 ||
+                  user.role == 1 ) { %> <% if (comp==true) { %>
+                  <button
+                    class="btn btn-primary btn-lg rounded-button"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addGroup-modal"
+                    title="Add group"
+                  >
+                    <i class="align-middle" data-feather="plus"></i>
+                  </button>
+                  <% } %> <% } %> <% } %>
+
+                  <button
+                    class="btn btn-secondary btn-lg rounded-button"
+                    id="downloadButton"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Download"
+                  >
+                    <i class="align-middle" data-feather="download"></i>
+                  </button>
+                  <div
+                    class="downloadOptions"
+                    id="downloadOptions"
+                    style="
+                      z-index: 10;
+                      position: absolute;
+                      top: 40px;
+                      right: 10px;
+                      width: 100px;
+                      display: none;
+                      background-color: #495057;
+                      color: #ffffff;
+                      border: 1px solid gray;
+                    "
+                  >
+                    <ul style="list-style-type: none; padding: 8px">
+                      <li
+                        style="padding: 4px; font-weight: 700"
+                        onclick="downloadFile('DOCX')"
+                      >
+                        DOCX
+                      </li>
+                      <li
+                        style="padding: 4px; font-weight: 700"
+                        onclick="downloadFile('EXCEL')"
+                      >
+                        EXCEL
+                      </li>
+                      <li
+                        style="padding: 4px; font-weight: 700"
+                        onclick="downloadFile('PDF')"
+                      >
+                        PDF
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Modal -->
+            <div
+              class="modal fade"
+              id="addGroup-modal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      Add Group
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <form
+                      action="/create_group/<%= company %>"
+                      method="POST"
+                      id="createGroupForm"
+                    >
+                      <div class="form-group" style="margin-bottom: 10px">
+                        <label
+                          for=""
+                          class="input-label"
+                          style="margin-bottom: 5px"
+                          >Group Name</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="groupName"
+                          required
+                        />
+                      </div>
+                      <% if (comp==true) { %>
+                      <div class="form-group" style="margin-bottom: 10px">
+                        <label
+                          for=""
+                          class="input-label"
+                          style="margin-bottom: 5px"
+                          >Group Admin</label
+                        >
+                        <select class="form-control" name="adminId" required>
+                          <option value="">--Select Admin--</option>
+                          <% groupAdmins?.forEach(function(item) { %>
+                          <option value="<%= item?._id %>">
+                            <%= item?.name %>
+                          </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                      <% } %>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      id="create_group_btn"
+                      type="submit"
+                      class="btn btn-primary"
+                    >
+                      Create Group
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+                <div class="card flex-fill">
+                  <div style="text-align: center; padding: 20px">
+                    <h3 style="font-weight: bold; line-height: 13px">
+                      <span style="font-size: 10px"
+                        >ASSIGNMENT OF ACCOUNTABILITY</span
+                      ><br /><span style="font-size: 14px">
+                        <%= formDataItems?.empCompanyName %>
+                      </span>
+                    </h3>
+                  </div>
+                  <% if(formDataItems[0]==null) { %>
+
+                  <div
+                    class="col-md-4 text-center"
+                    style="
+                      margin: auto;
+                      background-color: #cfe2ff;
+                      border-radius: 5px;
+                      padding: 15px 0 0 0;
+                    "
+                  >
+                    <p>No Data Found.</p>
+                  </div>
+                  <br />
+
+                  <% } else { %>
+
+                  <div class="table-responsive">
+                    <table
+                      id="sortableTable"
+                      class="table table-hover my-0"
+                      style="table-layout: fixed"
+                    >
+                      <thead style="display: table-header-group">
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              border: 2px solid #000;
+                              position: relative;
+                              width: 128px;
+                            "
+                          >
+                            <div class="check-all">
+                              <label>Select All</label>
+                              <input
+                                type="checkbox"
+                                id="selectAllCheckbox"
+                                style="float: right"
+                              />
+                            </div>
+                            Actions
+                          </th>
+
+                          <% formDataItems.forEach(function(item, index) { %>
+                          <th
+                            id="<%= index + 1 %>"
+                            draggable="true"
+                            ondragstart="drag(event)"
+                            style="border: 2px solid #000; width: 260px"
+                          >
+                            <input
+                              type="checkbox"
+                              class="header-checkbox"
+                              data-column="<%= item?._id %>"
+                              style="float: right"
+                            />
+                            <br />
+                            <div class="d-flex align-items-center gap-2">
+                              <a
+                                href="/edit-form/<%= item?._id %>"
+                                class="btn btn-info rounded-button"
+                                role="button"
+                                ><i class="align-middle" data-feather="edit"></i
+                              ></a>
+
+                              <button
+                                type="button"
+                                class="btn btn-danger rounded-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal<%= item?._id %>"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="trash"
+                                ></i>
+                              </button>
+
+                              <button
+                                style="position: relative"
+                                id="downloadSingle<%= index+1 %>"
+                                onclick="openOptions('<%= index+1 %>')"
+                                class="btn btn-secondary rounded-button"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="download"
+                                ></i>
+                                <div
+                                  class="downloadOptions"
+                                  id="downloadSingleOptions<%= index+1 %>"
+                                  style="
+                                    z-index: 10;
+                                    position: absolute;
+                                    top: 40px;
+                                    right: 10px;
+                                    width: 100px;
+                                    display: none;
+                                    background-color: #495057;
+                                    color: #ffffff;
+                                    border: 1px solid gray;
+                                  "
+                                >
+                                  <ul
+                                    style="list-style-type: none; padding: 8px"
+                                  >
+                                    <li
+                                      style="padding: 4px; font-weight: 700"
+                                      onclick="downloadSingleEmployeeFile('DOCX', '<%= item?._id %>')"
+                                    >
+                                      DOCX
+                                    </li>
+                                    <li
+                                      style="padding: 4px; font-weight: 700"
+                                      onclick="downloadSingleEmployeeFile('EXCEL', '<%= item?._id %>')"
+                                    >
+                                      EXCEL
+                                    </li>
+                                    <li
+                                      style="padding: 4px; font-weight: 700"
+                                      onclick="downloadSingleEmployeeFile('PDF', '<%= item?._id %>')"
+                                    >
+                                      PDF
+                                    </li>
+                                    <li style="padding: 4px; font-weight: 700">
+                                      <a href="/aoa-details/<%= item?._id %>"
+                                        >AOA</a
+                                      >
+                                    </li>
+                                  </ul>
+                                </div>
+                              </button>
+
+                              <a
+                                href="/all-evaluations/<%= item?._id %>"
+                                class="btn btn-warning rounded-button"
+                                role="button"
+                              >
+                                <i
+                                  class="align-middle"
+                                  data-feather="file-text"
+                                ></i>
+                              </a>
+                              <!-- <a
+                                href="/goals-worksheet-single/view/<%= item?.user?.goalsWorksheet ?? 'undefined' %>?comp=<%= company %>"
+                                class="btn btn-success rounded-button"
+                                role="button"
+                              >
+                                <i class="fas fa-clipboard-list"></i>
+                              </a> -->
+                            </div>
+                          </th>
+
+                          <!-- Confirm delete modal-->
+                          <div
+                            class="modal fade"
+                            id="confirmDeleteModal<%= item?._id %>"
+                            tabindex="-1"
+                            aria-labelledby="exampleModalLabel"
+                            aria-hidden="true"
+                          >
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5
+                                    class="modal-title"
+                                    id="exampleModalLabel"
+                                  >
+                                    Confirm Delete
+                                  </h5>
+                                  <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                  ></button>
+                                </div>
+                                <div class="modal-body">
+                                  <h6>
+                                    Are you sure you want to delete <%=
+                                    item?.name %>
+                                  </h6>
+                                </div>
+
+                                <div class="modal-footer">
+                                  <% if (comp) { %>
+                                  <a
+                                    href="/delete-employee/<%= item?._id %>"
+                                    type="submit"
+                                    class="btn btn-danger"
+                                    >Delete
+                                  </a>
+                                  <% } else { %>
+                                  <a
+                                    href="/delete-employee-by-group-admin/<%= item?._id %>"
+                                    type="submit"
+                                    class="btn btn-danger"
+                                    >Delete
+                                  </a>
+                                  <% } %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Name
+                            <p style="font-size: xx-small; font-style: italic">
+                              First and last name.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { %>
+                          <th
+                            id="<%= index + 1 %>"
+                            ondragstart="drag(event)"
+                            data-id="<%= item?.name %>"
+                            style="
+                              font-weight: bold;
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            <%= item?.name %>
+                          </th>
+                          <% }); %>
+                        </tr>
+                      </thead>
+                      <tbody
+                        id="applicantInfo"
+                        style="display: table-row-group"
+                      >
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Title
+                            <p style="font-size: xx-small; font-style: italic">
+                              EXACT current job title.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { %>
+                          <td
+                            id="<%= index + 1 %>"
+                            data-id="<%= item?.name %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%= item?.title %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Job Description
+                            <p style="font-size: xx-small; font-style: italic">
+                              Describe your key job responsibilities in your
+                              current position. (3-5 bulleted statements, ranked
+                              in order of importance).
+                            </p>
+                          </th>
+                          <!-- striped out bullets and removed additional spaces by Miraj-->
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.jobDescription.replace(/\t/g,
+                          "").split('\r\n').map(subItem=> subItem.length > 0 ? `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` : "" ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            data-id="<%= item?.name %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Manager/ Supervisor
+                            <p style="font-size: xx-small; font-style: italic">
+                              Name and EXACT title of the one person to whom you
+                              directly report; Who is responsible for your
+                              formal performance reviews?
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.managerSupervisor.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Direct Reports
+                            <p style="font-size: xx-small; font-style: italic">
+                              The names and EXACT titles of those persons who
+                              report directly to you; you are responsible for
+                              their formal performance reviews.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.directReports.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Accountable
+                            <p style="font-size: xx-small; font-style: italic">
+                              Areas of focus for which YOU, and ONLY YOU, are
+                              Accountable.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.accountable.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Participate
+                            <p style="font-size: xx-small; font-style: italic">
+                              Activities you have responsibility to participate
+                              in but for which someone else has the “A".
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.participate.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <!-- <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Compensation
+                            <p style="font-size: xx-small; font-style: italic;">How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { 
+                          const compensation = item?.compensation ? item?.compensation : "";
+                          
+                          const listItems=compensation.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          `
+                          ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none;">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr> -->
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Metrics
+                            <p style="font-size: xx-small; font-style: italic">
+                              How does your direct supervisor measure your
+                              success?
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.metrics.split('\n').map(subItem=> `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Positional Objectives
+                            <p style="font-size: xx-small; font-style: italic">
+                              What are your key objectives for this fiscal year
+                              in your current position? These are likely
+                              objectives that are currently in written form.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.positionalObjectives.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Personal Objectives
+                            <p style="font-size: xx-small; font-style: italic">
+                              What are your personal (not positional) objectives
+                              over the next 2-3 years and beyond?
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.personalObjectives.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Authority Levels
+                            <p style="font-size: xx-small; font-style: italic">
+                              What authority levels or decision rights do you
+                              have for planning, spending, hiring/firing,
+                              contractual relationships, structural changes,
+                              etc.?
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.authorityLevels.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+
+                        <tr>
+                          <th
+                            class="first-column"
+                            style="
+                              background-color: #ccffff;
+                              border: 2px solid #000;
+                            "
+                          >
+                            Delegation of Authority
+                            <p style="font-size: xx-small; font-style: italic">
+                              What freedom do you give to your subordinates to
+                              make decisions on their own, e.g. authority
+                              levels, requesting permission, submitting data,
+                              etc. Think about which of your accountabilities
+                              you might be able to delegate.
+                            </p>
+                          </th>
+                          <% formDataItems.forEach(function(item, index) { const
+                          listItems=item?.delegationOfAuthority.split('\n').map(subItem=>
+                          `
+                          <li style="margin-bottom: 10px">${subItem}</li>
+                          ` ).join('') %>
+                          <td
+                            id="<%= index + 1 %>"
+                            style="border: 2px solid #000; vertical-align: top"
+                          >
+                            <%- `
+                            <ul style="padding: 0px; list-style-type: none">
+                              ${listItems}
+                            </ul>
+                            ` %>
+                          </td>
+                          <% }); %>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js@1.0.0/html-docx.js"></script>
+    <script>
+      // Function to handle the select-all checkbox
+      function handleSelectAll() {
+        const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+        const headerCheckboxes = document.querySelectorAll(".header-checkbox");
+
+        for (const checkbox of headerCheckboxes) {
+          checkbox.checked = selectAllCheckbox.checked;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add a change event listener to the select-all checkbox
+        const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+        selectAllCheckbox.addEventListener("change", handleSelectAll);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add an event listener to the form submit button
+        const createGroupBtn = document.getElementById("create_group_btn");
+        createGroupBtn.addEventListener("click", submitForm);
+      });
+
+      function submitForm() {
+        // Gather checked values of header checkboxes
+        const headerCheckboxes = document.querySelectorAll(
+          ".header-checkbox:checked"
+        );
+        const headerValues = Array.from(headerCheckboxes).map(
+          (checkbox) => checkbox.dataset.column
+        );
+
+        // Append the checked values to the form as a hidden input
+        const form = document.getElementById("createGroupForm");
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "selectedIds"; // You can change the name as needed
+        hiddenInput.value = JSON.stringify(headerValues); // Convert to JSON to send as an array
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+      }
+    </script>
+    <script>
+      var dragCol = null;
+
+      function handleDragStart(e) {
+        dragCol = this;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", this.outerHTML);
+      }
+
+      function handleDragOver(e) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        e.dataTransfer.dropEffect = "move";
+        return false;
+      }
+      const updateColumn = async (id, columnOrder) => {
+        try {
+          const url = `/update-columnOrder/${id}`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ columnOrder }),
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+            console.log(new Data(), responseData); // Success message
+          } else {
+            console.error(
+              new Data(),
+              "Failed to update column:",
+              response.status,
+              response.statusText
+            );
+          }
+        } catch (error) {
+          console.error(new Date(), "An error occurred:", error.message);
+        }
+      };
+
+      const fetchColumnOrder = async (id) => {
+        try {
+          const response = await fetch(`/get-ColumnOrder/${id}`);
+          const data = await response.json();
+
+          if (response.status === 200) {
+            return data; // Return the data if the request is successful
+          } else {
+            console.error("Failed to fetch column order:", response.status);
+            return null; // Return null in case of an error
+          }
+        } catch (error) {
+          console.error("An error occurred:", error.message);
+          return null; // Return null in case of an error
+        }
+      };
+
+      async function handleDrop(e) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        if (dragCol === this) {
+          return false;
+        }
+
+        var sourceIndex = Array.from(dragCol.parentNode.children).indexOf(
+          dragCol
+        );
+        var targetIndex = Array.from(this.parentNode.children).indexOf(this);
+        var table = document.getElementById("sortableTable");
+        var rows = table.rows;
+
+        // Create an array to store the new order of column indexes and IDs
+        var newOrder = [];
+        var newIDs = [];
+
+        for (var i = 0; i < rows.length; i++) {
+          var sourceCell = rows[i].cells[sourceIndex];
+          var targetCell = rows[i].cells[targetIndex];
+
+          // Store the index of the targetCell in the newOrder array
+          newOrder.push(
+            Array.from(this.parentNode.children).indexOf(targetCell)
+          );
+
+          // Store the ID of the sourceCell in the newIDs array
+          newIDs.push(sourceCell.id);
+
+          // Remove the sourceCell from its current position
+          rows[i].deleteCell(sourceIndex);
+
+          // Insert the sourceCell at the target position
+          var nextIndex =
+            targetIndex < sourceIndex ? targetIndex : targetIndex + 1;
+
+          rows[i].insertBefore(sourceCell, rows[i].cells[targetIndex]);
+        }
+
+        // Update the column order based on the newOrder array
+        var columnOrder = Array.from(
+          table.querySelectorAll("th[draggable=true]"),
+          function (header) {
+            return header.id;
+          }
+        );
+
+        const comId = `<%= company %>`;
+        await updateColumn(comId, columnOrder);
+        //  console.log(columnOrder)
+        // Update the column order in localStorage
+        // localStorage.setItem("columnOrder", JSON.stringify(columnOrder));
+
+        return false;
+      }
+
+      var headers = document.querySelectorAll("th[draggable=true]");
+      [].forEach.call(headers, function (header) {
+        header.addEventListener("dragstart", handleDragStart, false);
+        header.addEventListener("dragover", handleDragOver, false);
+        header.addEventListener("drop", handleDrop, false);
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document
+          .getElementById("chartjs-dashboard-line")
+          .getContext("2d");
+        var gradient = ctx.createLinearGradient(0, 0, 0, 225);
+        gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
+        gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
+        // Line chart
+        new Chart(document.getElementById("chartjs-dashboard-line"), {
+          type: "line",
+          data: {
+            labels: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            datasets: [
+              {
+                label: "Sales ($)",
+                fill: true,
+                backgroundColor: gradient,
+                borderColor: window.theme.primary,
+                data: [
+                  2115, 1562, 1584, 1892, 1587, 1923, 2566, 2448, 2805, 3438,
+                  2917, 3327,
+                ],
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            tooltips: {
+              intersect: false,
+            },
+            hover: {
+              intersect: true,
+            },
+            plugins: {
+              filler: {
+                propagate: false,
+              },
+            },
+            scales: {
+              xAxes: [
+                {
+                  reverse: true,
+                  gridLines: {
+                    color: "rgba(0,0,0,0.0)",
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    stepSize: 1000,
+                  },
+                  display: true,
+                  borderDash: [3, 3],
+                  gridLines: {
+                    color: "rgba(0,0,0,0.0)",
+                  },
+                },
+              ],
+            },
+          },
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Pie chart
+        new Chart(document.getElementById("chartjs-dashboard-pie"), {
+          type: "pie",
+          data: {
+            labels: ["Chrome", "Firefox", "IE"],
+            datasets: [
+              {
+                data: [4306, 3801, 1689],
+                backgroundColor: [
+                  window.theme.primary,
+                  window.theme.warning,
+                  window.theme.danger,
+                ],
+                borderWidth: 5,
+              },
+            ],
+          },
+          options: {
+            responsive: !window.MSInputMethodContext,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            cutoutPercentage: 75,
+          },
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Bar chart
+        new Chart(document.getElementById("chartjs-dashboard-bar"), {
+          type: "bar",
+          data: {
+            labels: [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec",
+            ],
+            datasets: [
+              {
+                label: "This year",
+                backgroundColor: window.theme.primary,
+                borderColor: window.theme.primary,
+                hoverBackgroundColor: window.theme.primary,
+                hoverBorderColor: window.theme.primary,
+                data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
+                barPercentage: 0.75,
+                categoryPercentage: 0.5,
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            scales: {
+              yAxes: [
+                {
+                  gridLines: {
+                    display: false,
+                  },
+                  stacked: false,
+                  ticks: {
+                    stepSize: 20,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  stacked: false,
+                  gridLines: {
+                    color: "transparent",
+                  },
+                },
+              ],
+            },
+          },
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var markers = [
+          {
+            coords: [31.230391, 121.473701],
+            name: "Shanghai",
+          },
+          {
+            coords: [28.70406, 77.102493],
+            name: "Delhi",
+          },
+          {
+            coords: [6.524379, 3.379206],
+            name: "Lagos",
+          },
+          {
+            coords: [35.689487, 139.691711],
+            name: "Tokyo",
+          },
+          {
+            coords: [23.12911, 113.264381],
+            name: "Guangzhou",
+          },
+          {
+            coords: [40.7127837, -74.0059413],
+            name: "New York",
+          },
+          {
+            coords: [34.052235, -118.243683],
+            name: "Los Angeles",
+          },
+          {
+            coords: [41.878113, -87.629799],
+            name: "Chicago",
+          },
+          {
+            coords: [51.507351, -0.127758],
+            name: "London",
+          },
+          {
+            coords: [40.416775, -3.70379],
+            name: "Madrid ",
+          },
+        ];
+        var map = new jsVectorMap({
+          map: "world",
+          selector: "#world_map",
+          zoomButtons: true,
+          markers: markers,
+          markerStyle: {
+            initial: {
+              r: 9,
+              strokeWidth: 7,
+              stokeOpacity: 0.4,
+              fill: window.theme.primary,
+            },
+            hover: {
+              fill: window.theme.primary,
+              stroke: window.theme.primary,
+            },
+          },
+          zoomOnScroll: false,
+        });
+        window.addEventListener("resize", () => {
+          map.updateSize();
+        });
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        var defaultDate =
+          date.getUTCFullYear() +
+          "-" +
+          (date.getUTCMonth() + 1) +
+          "-" +
+          date.getUTCDate();
+        document.getElementById("datetimepicker-dashboard").flatpickr({
+          inline: true,
+          prevArrow: '<span title="Previous month">&laquo;</span>',
+          nextArrow: '<span title="Next month">&raquo;</span>',
+          defaultDate: defaultDate,
+        });
+      });
+
+      document
+        .getElementById("downloadButton")
+        .addEventListener("click", function () {
+          const optionElement = document.getElementById("downloadOptions");
+          optionElement.style.display === "none"
+            ? (optionElement.style.display = "block")
+            : (optionElement.style.display = "none");
+        });
+
+      function downloadFile(option) {
+        // Gather checked values of header checkboxes
+        const headerCheckboxes = document.querySelectorAll(
+          ".header-checkbox:checked"
+        );
+        const headerValues = Array.from(headerCheckboxes).map(
+          (checkbox) => checkbox.dataset.column
+        );
+        if (headerValues.length === 0) {
+          alert("Please, check at least one employee.");
+        } else {
+          switch (option) {
+            case "DOCX":
+              window.location.href = `/admin/downloadDOCX/${headerValues}`;
+              break;
+            case "EXCEL":
+              window.location.href = `/admin/downloadEXCEL/${headerValues}`;
+              break;
+            case "PDF":
+              window.location.href = `/admin/downloadPDF/${headerValues}`;
+              break;
+            default:
+              alert("Please, select a file type.");
+          }
+        }
+      }
+
+      function openOptions(id) {
+        const optionElement = document.getElementById(
+          `${"downloadSingleOptions" + id}`
+        );
+        optionElement.style.display === "none"
+          ? (optionElement.style.display = "block")
+          : (optionElement.style.display = "none");
+      }
+
+      function downloadSingleEmployeeFile(option, id) {
+        switch (option) {
+          case "DOCX":
+            window.location.href = `/admin/downloadDOCX/${id}`;
+            break;
+          case "EXCEL":
+            window.location.href = `/admin/downloadEXCEL/${id}`;
+            break;
+          case "PDF":
+            window.location.href = `/admin/downloadPDF/${id}`;
+            break;
+          default:
+            alert("Please, select a file type.");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="applicantStyles">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/img/photos/symbol.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>Employee Form</title>
+
+    <link href="/css/app.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="main">
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div class="row">
+              <div class="col-12">
+                <div class="col-md-6 col-xs-10" style="margin: 0 auto">
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="card-title mb-0">Employee Details</h5>
+                    </div>
+                    <div class="card-body">
+                      <form
+                        action="/edit-form/submit/<%= formData.id %>"
+                        method="POST"
+                      >
+                        <div class="form-group">
+                          <label for="name" class="input-label">Name</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            name="name"
+                            placeholder="Enter name"
+                            value="<%= formData.name %>"
+                          />
+                          <small class="form-text text-muted">
+                            First and last name.
+                          </small>
+                        </div>
+                        <div class="form-group">
+                          <label for="title" class="input-label">Title</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="title"
+                            name="title"
+                            placeholder="Enter title"
+                            value="<%= formData.title %>"
+                          />
+                          <small class="form-text text-muted">
+                            EXACT current job title.
+                          </small>
+                        </div>
+                        <div class="form-group">
+                          <label for="jobDescription" class="input-label"
+                            >Job Description</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="jobDescription"
+                            name="jobDescription"
+                            rows="3"
+                          >
+<%= formData.jobDescription %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            Describe your key job responsibilities in your
+                            current position. (3-5 bulleted statements, ranked
+                            in order of importance).
+                          </small>
+                        </div>
+                        <div class="form-group">
+                          <label for="managerSupervisor" class="input-label"
+                            >Manager/Supervisor</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="managerSupervisor"
+                            name="managerSupervisor"
+                            placeholder="Enter manager/supervisor"
+                            value="<%= formData.managerSupervisor %>"
+                          />
+                          <small class="form-text text-muted">
+                            Name and EXACT title of the one person to whom you
+                            directly report; Who is responsible for your formal
+                            performance reviews?
+                          </small>
+                        </div>
+                        <div class="form-group">
+                          <label for="directReports" class="input-label"
+                            >Direct Reports</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="directReports"
+                            name="directReports"
+                            rows="3"
+                          >
+<%= formData.directReports %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            The names and EXACT titles of those persons who
+                            report directly to you; you are responsible for
+                            their formal performance reviews.
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="accountable" class="input-label"
+                            >Accountable</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="accountable"
+                            name="accountable"
+                            rows="3"
+                          >
+<%= formData.accountable %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            Areas of focus for which YOU, and ONLY YOU, are
+                            Accountable.
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="participate" class="input-label"
+                            >Participate</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="participate"
+                            name="participate"
+                            rows="3"
+                          >
+<%= formData.participate %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            Activities you have responsibility to participate in
+                            but for which someone else has the “A".
+                          </small>
+                        </div>
+
+                        <!-- <div class="form-group">
+										  <label for="compensation" class="input-label">Compensation</label>
+										  <textarea class="form-control" id="compensation" name="compensation" rows="3"><%= formData?.compensation ? formData?.compensation.trim() : "" %></textarea>
+										  <small class="form-text text-muted">
+											How are you compensated, other than salary (types and structure of compensation, not amounts: e.g., commissions, bonuses, gain-sharing, ownership interest)?
+										  </small>
+										</div> -->
+
+                        <div class="form-group">
+                          <label for="metrics" class="input-label"
+                            >Metrics</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="metrics"
+                            name="metrics"
+                            rows="3"
+                          >
+<%= formData.metrics %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            How does your direct supervisor measure your
+                            success?
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="positionalObjectives" class="input-label"
+                            >Current Year Positional Objectives</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="positionalObjectives"
+                            name="positionalObjectives"
+                            rows="3"
+                          >
+<%= formData.positionalObjectives %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            What are your key objectives for this fiscal year in
+                            your current position? These are likely objectives
+                            that are currently in written form.
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="personalObjectives" class="input-label"
+                            >Personal Objectives</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="personalObjectives"
+                            name="personalObjectives"
+                            rows="3"
+                          >
+<%= formData.personalObjectives %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            What are your personal (not positional) objectives
+                            over the next 2-3 years and beyond?
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="authorityLevels" class="input-label"
+                            >Authority Levels</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="authorityLevels"
+                            name="authorityLevels"
+                            rows="3"
+                          >
+<%= formData.authorityLevels %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            What authority levels or decision rights do you have
+                            for planning, spending, hiring/firing, contractual
+                            relationships, structural changes, etc.?
+                          </small>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="delegationOfAuthority" class="input-label"
+                            >Delegation of Authority</label
+                          >
+                          <textarea
+                            class="form-control"
+                            id="delegationOfAuthority"
+                            name="delegationOfAuthority"
+                            rows="3"
+                          >
+<%= formData.delegationOfAuthority %></textarea
+                          >
+                          <small class="form-text text-muted">
+                            What freedom do you give to your subordinates to
+                            make decisions on their own, e.g. authority levels,
+                            requesting permission, submitting data, etc. Think
+                            about which of your accountabilities you might be
+                            able to delegate.
+                          </small>
+                        </div>
+
+                        <!-- Add more fields with the "i" button functionality here -->
+                        <button
+                          type="submit"
+                          id="formSubmit"
+                          class="btn btn-primary btn-block"
+                          style="float: right"
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>

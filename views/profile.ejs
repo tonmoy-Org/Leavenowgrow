@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+
+    <link
+      rel="canonical"
+      href="https://demo-basic.adminkit.io/pages-profile.html"
+    />
+
+    <title>Profile | Assignment Of Accountability</title>
+
+    <link href="/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .obj {
+        border-radius: 50%;
+        width: 95%;
+        height: 95%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <%- include('partials/navbar', { user: user, path: "profile" }); %>
+        </div>
+      </nav>
+
+      <div class="main">
+        <%- include('partials/header', { user: user }); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div class="mb-3">
+              <h1 class="h3 d-inline align-middle">Profile</h1>
+            </div>
+            <div class="row">
+              <div class="col-md-4 col-xl-3">
+                <div class="card">
+                  <div class="card-header">
+                    <h5 class="card-title mb-0">Profile Settings</h5>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="list-group list-group-flush" role="tablist">
+                      <a
+                        class="list-group-item list-group-item-action active"
+                        data-bs-toggle="list"
+                        href="#account"
+                        role="tab"
+                        aria-selected="true"
+                      >
+                        Account
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#password"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Password
+                      </a>
+                      <!-- <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Privacy and safety
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Email notifications
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Web notifications
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Widgets
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Your data
+                      </a>
+                      <a
+                        class="list-group-item list-group-item-action"
+                        data-bs-toggle="list"
+                        href="#"
+                        role="tab"
+                        aria-selected="false"
+                        tabindex="-1"
+                      >
+                        Delete account
+                      </a> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-8 col-xl-9">
+                <div class="tab-content">
+                  <div
+                    class="tab-pane fade active show"
+                    id="account"
+                    role="tabpanel"
+                  >
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title mb-0">Profile info</h5>
+                      </div>
+                      <div class="card-body">
+                        <form onsubmit="handleSaveChange(event)">
+                          <div class="row">
+                            <div class="col-md-8">
+                              <div class="mb-3">
+                                <label class="form-label" for="inputname"
+                                  >Name</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control"
+                                  id="inputname"
+                                  placeholder="Your Name"
+                                  name="name"
+                                  value="<%= user?.name %>"
+                                />
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label" for="inputemail"
+                                  >Email</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control disabled"
+                                  id="inputemail"
+                                  name="email"
+                                  placeholder="Your Email"
+                                  value="<%= user?.email %>"
+                                  readonly
+                                />
+                                <div
+                                  class="d-flex align-items-center justify-content-between gap-4"
+                                >
+                                  <small
+                                    class="<%= user?.isVerified ? 'text-success' : 'text-danger' %>"
+                                  >
+                                    <i
+                                      class="align-middle"
+                                      data-feather="<%= user?.isVerified ? 'check' : 'x-circle' %>"
+                                    ></i>
+                                    <% if(user?.isVerified){%> Verified <% }
+                                    else { %> Not Verified <% } %>
+                                  </small>
+                                  <button
+                                    class="btn btn-link"
+                                    id="get-verified-link"
+                                    type="button"
+                                  >
+                                    <% if(!user?.isVerified) { %> Get Verified
+                                    <% } %>
+                                  </button>
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label" for="inputmanager"
+                                  >Manager</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control disabled"
+                                  id="inputmanager"
+                                  name="manager"
+                                  placeholder="Your Manager"
+                                  value="<%= user?.manager?.name %>"
+                                  readonly
+                                />
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label" for="inputmanager"
+                                  >Permisssion Level</label
+                                >
+                                <input
+                                  type="text"
+                                  class="form-control disabled"
+                                  id="inputlevel"
+                                  name="level"
+                                  placeholder="Your level"
+                                  value="<%= user?.level %>"
+                                  readonly
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div
+                                class="d-flex flex-column align-items-center justify-content-center text-center"
+                              >
+                                <div
+                                  id="preview"
+                                  style="width: 128px; height: 128px"
+                                  class="d-flex align-items-center justify-content-center p-2 align-middle rounded-circle"
+                                >
+                                  <% if(user?.profilePictureUrl) { %>
+                                  <img
+                                    alt="Charles Hall"
+                                    src="<%= user?.profilePictureUrl %>"
+                                    class="rounded-circle img-responsive mt-2"
+                                    width="128"
+                                    height="128"
+                                  />
+                                  <% } else { %>
+                                  <i
+                                    class="align-middle"
+                                    data-feather="user"
+                                    style="width: 80%; height: 80%"
+                                  ></i>
+                                  <% } %>
+                                </div>
+
+                                <div class="mt-2">
+                                  <button
+                                    type="button"
+                                    onclick="handleFile()"
+                                    class="btn btn-primary"
+                                  >
+                                    <i class="fas fa-upload"></i> Upload
+                                  </button>
+                                </div>
+                                <input
+                                  type="file"
+                                  name="file"
+                                  id="fileInput"
+                                  class="d-none"
+                                  accept="image/*"
+                                />
+                                <small
+                                  >Recommend size: JPG, 128&times;128px or
+                                  larger</small
+                                >
+                              </div>
+                            </div>
+                          </div>
+
+                          <button type="submit" class="btn btn-primary">
+                            Save changes
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="password" role="tabpanel">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">Change Your Password</h5>
+
+                        <form
+                          class="needs-validation"
+                          onsubmit="handleResetPassword(event)"
+                          novalidate
+                        >
+                          <input
+                            type="email"
+                            class="hidden"
+                            name="email"
+                            value="<%= user?.email %>"
+                            hidden
+                          />
+
+                          <div class="mb-3">
+                            <label class="form-label" for="inputPasswordCurrent"
+                              >Current password</label
+                            >
+                            <input
+                              type="password"
+                              class="form-control"
+                              id="inputPasswordCurrent"
+                              name="passwordCurrent"
+                            />
+                            <small
+                              ><a href="/forgot-my-password"
+                                >Forgot your password?</a
+                              ></small
+                            >
+                          </div>
+
+                          <div class="mb-3">
+                            <label class="form-label">New Password</label>
+                            <div class="input-group" id="show_hide_password">
+                              <input
+                                id="validationPassword"
+                                class="form-control form-control-lg"
+                                type="password"
+                                name="passwordNew"
+                                placeholder="Type new password"
+                                required
+                              />
+                              <button
+                                id="show_hide_password_btn"
+                                class="btn btn-secondary"
+                                type="button"
+                                id="button-addon2"
+                                onclick="handleShowHidePassword()"
+                              >
+                                <i
+                                  id="show_hide_password_icon"
+                                  class="fa fa-eye"
+                                  aria-hidden="true"
+                                ></i>
+                              </button>
+                            </div>
+                            <div class="progress" style="height: 5px">
+                              <div
+                                id="progressbar"
+                                class="progress-bar progress-bar-striped progress-bar-animated"
+                                role="progressbar"
+                                style="width: 10%"
+                                aria-valuenow="50"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                              ></div>
+                            </div>
+                            <small
+                              id="passwordHelpBlock"
+                              class="form-text text-muted"
+                            >
+                              Use 8-20 characters, including a number, a special
+                              character (!@#$%&*_?), and upper & lowercase
+                              letters.
+                            </small>
+
+                            <div id="feedbackin" class="valid-feedback">
+                              Strong Password!
+                            </div>
+                            <div id="feedbackirn" class="invalid-feedback">
+                              Atlead 8 characters, Number, special character
+                              Caplital Letter and Small letters
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label"
+                              >Re-type New Password</label
+                            >
+                            <div class="input-group" id="show_hide_password">
+                              <input
+                                id="validationRetypePassword"
+                                class="form-control form-control-lg"
+                                type="password"
+                                name="passwordNewConfirm"
+                                placeholder="Confirm the password"
+                                disabled
+                                required
+                              />
+                              <button
+                                id="show_hide_retype_password_btn"
+                                class="btn btn-secondary"
+                                type="button"
+                                id="button-addon2"
+                                onclick="handleShowHideRetypePassword()"
+                              >
+                                <i
+                                  id="show_hide_retype_password_icon"
+                                  class="fa fa-eye"
+                                  aria-hidden="true"
+                                ></i>
+                              </button>
+                            </div>
+                            <div id="feedbackretypein" class="valid-feedback">
+                              Password Matched!
+                            </div>
+                            <div
+                              id="feedbackretypeirn"
+                              class="invalid-feedback"
+                            >
+                              Password did not Match!
+                            </div>
+                          </div>
+
+                          <button type="submit" class="btn btn-primary">
+                            Save changes
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              id="toast-container"
+              style="display: none"
+              class="toast-container position-fixed bottom-0 end-0 p-3"
+            >
+              <div
+                class="toast"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+              >
+                <div class="toast-body">
+                  <div
+                    class="p-2 text-white rounded-2 bg-primary d-flex align-items-center gap-2"
+                  >
+                    <p class="m-0" id="toast-message">
+                      Hello, world! This is a toast message.
+                    </p>
+                    <button
+                      type="button"
+                      class="btn-close btn-close-white"
+                      data-bs-dismiss="toast"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <footer class="footer"><%- include('partials/footer'); %></footer>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script>
+      function handleShowHidePassword() {
+        const inputElem = document.getElementById("validationPassword");
+        const btnElem = document.getElementById("show_hide_password_btn");
+
+        const inputType = inputElem.getAttribute("type");
+
+        if (inputType === "password") {
+          inputElem.setAttribute("type", "text");
+          btnElem.innerHTML =
+            '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+        } else if (inputType === "text") {
+          inputElem.setAttribute("type", "password");
+          btnElem.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
+        }
+      }
+
+      function handleShowHideRetypePassword() {
+        const inputElem = document.getElementById("validationRetypePassword");
+        const btnElem = document.getElementById(
+          "show_hide_retype_password_btn"
+        );
+
+        const inputType = inputElem.getAttribute("type");
+
+        if (inputType === "password") {
+          inputElem.setAttribute("type", "text");
+          btnElem.innerHTML =
+            '<i class="fa fa-eye-slash" aria-hidden="true"></i>';
+        } else if (inputType === "text") {
+          inputElem.setAttribute("type", "password");
+          btnElem.innerHTML = '<i class="fa fa-eye" aria-hidden="true"></i>';
+        }
+      }
+    </script>
+    <script>
+      (function () {
+        "use strict";
+        window.addEventListener(
+          "load",
+          function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName("needs-validation");
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(
+              forms,
+              function (form) {
+                // making sure password enters the right characters
+                form.validationPassword.addEventListener(
+                  "keypress",
+                  function (event) {
+                    var checkx = true;
+                    var chr = String.fromCharCode(event.which);
+
+                    var matchedCase = new Array();
+                    matchedCase.push("[!@#$%&*_?]"); // Special Charector
+                    matchedCase.push("[A-Z]"); // Uppercase Alpabates
+                    matchedCase.push("[0-9]"); // Numbers
+                    matchedCase.push("[a-z]");
+
+                    for (var i = 0; i < matchedCase.length; i++) {
+                      if (new RegExp(matchedCase[i]).test(chr)) {
+                        checkx = false;
+                      }
+                    }
+
+                    if (form.validationPassword.value.length >= 20)
+                      checkx = true;
+
+                    if (checkx) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }
+                  }
+                );
+
+                //Validate Password to have more than 8 Characters and A capital Letter, small letter, number and special character
+                // Create an array and push all possible values that you want in password
+                var matchedCase = new Array();
+                matchedCase.push("[$@$$!%*#?&]"); // Special Charector
+                matchedCase.push("[A-Z]"); // Uppercase Alpabates
+                matchedCase.push("[0-9]"); // Numbers
+                matchedCase.push("[a-z]"); // Lowercase Alphabates
+
+                form.validationPassword.addEventListener("keyup", function () {
+                  var messageCase = new Array();
+                  messageCase.push(" Special Charector"); // Special Charector
+                  messageCase.push(" Upper Case"); // Uppercase Alpabates
+                  messageCase.push(" Numbers"); // Numbers
+                  messageCase.push(" Lower Case"); // Lowercase Alphabates
+
+                  var ctr = 0;
+                  var rti = "";
+                  for (var i = 0; i < matchedCase.length; i++) {
+                    if (
+                      new RegExp(matchedCase[i]).test(
+                        form.validationPassword.value
+                      )
+                    ) {
+                      if (i == 0)
+                        messageCase.splice(
+                          messageCase.indexOf(" Special Charector"),
+                          1
+                        );
+                      if (i == 1)
+                        messageCase.splice(
+                          messageCase.indexOf(" Upper Case"),
+                          1
+                        );
+                      if (i == 2)
+                        messageCase.splice(messageCase.indexOf(" Numbers"), 1);
+                      if (i == 3)
+                        messageCase.splice(
+                          messageCase.indexOf(" Lower Case"),
+                          1
+                        );
+                      ctr++;
+                    }
+                  }
+
+                  // Display it
+                  var progressbar = 0;
+                  var strength = "";
+                  var bClass = "";
+                  switch (ctr) {
+                    case 0:
+                    case 1:
+                      strength = "Way too Weak";
+                      progressbar = 15;
+                      bClass = "bg-danger";
+                      break;
+                    case 2:
+                      strength = "Very Weak";
+                      progressbar = 25;
+                      bClass = "bg-danger";
+                      break;
+                    case 3:
+                      strength = "Weak";
+                      progressbar = 34;
+                      bClass = "bg-warning";
+                      break;
+                    case 4:
+                      strength = "Medium";
+                      progressbar = 65;
+                      bClass = "bg-warning";
+                      break;
+                  }
+
+                  if (
+                    strength == "Medium" &&
+                    form.validationPassword.value.length >= 8
+                  ) {
+                    strength = "Strong";
+                    bClass = "bg-success";
+                    form.validationPassword.setCustomValidity("");
+                  } else {
+                    form.validationPassword.setCustomValidity(strength);
+                  }
+
+                  var sometext = "";
+
+                  if (form.validationPassword.value.length < 8) {
+                    var lengthI = 8 - form.validationPassword.value.length;
+                    sometext += ` ${lengthI} more Characters, `;
+                  }
+
+                  sometext += messageCase;
+
+                  if (sometext) {
+                    sometext = " You Need" + sometext;
+                  }
+
+                  $("#progressbar")
+                    .removeClass("bg-danger bg-warning bg-success")
+                    .addClass(bClass);
+                  var plength = form.validationPassword.value.length;
+                  if (plength > 0) progressbar += (plength - 0) * 1.75;
+
+                  var percentage = progressbar + "%";
+
+                  $("#progressbar").width(percentage);
+
+                  if (form.validationPassword.checkValidity() === true) {
+                    form.validationRetypePassword.disabled = false;
+
+                    $("#feedbackin").text(strength + sometext);
+                    $("#feedbackin").css({
+                      display: "block",
+                    });
+                    $("#feedbackirn").css({
+                      display: "none",
+                    });
+                  } else {
+                    form.validationRetypePassword.disabled = true;
+
+                    $("#feedbackirn").text(strength + sometext);
+                    $("#feedbackirn").css({
+                      display: "block",
+                    });
+                    $("#feedbackin").css({
+                      display: "none",
+                    });
+                  }
+                });
+
+                form.validationRetypePassword.addEventListener(
+                  "keyup",
+                  function () {
+                    const newPassword = form.validationPassword.value;
+                    const retypeNewPassword =
+                      form.validationRetypePassword.value;
+
+                    const validFeedbackElem =
+                      document.getElementById("feedbackretypein");
+                    const inValidFeedbackElem =
+                      document.getElementById("feedbackretypeirn");
+
+                    if (!(newPassword === retypeNewPassword)) {
+                      // mismath password case
+                      form.validationRetypePassword.classList.add("is-invalid");
+                      validFeedbackElem.style.display = "none";
+                      inValidFeedbackElem.style.display = "block";
+                    } else {
+                      // mathed case
+                      form.validationRetypePassword.classList.remove(
+                        "is-invalid"
+                      );
+                      form.validationRetypePassword.classList.add("is-valid");
+
+                      validFeedbackElem.style.display = "block";
+                      inValidFeedbackElem.style.display = "none";
+                    }
+                  }
+                );
+              }
+            );
+          },
+          false
+        );
+      })();
+    </script>
+    <script>
+      function isStrongPassword(password) {
+        const strongPasswordRegExp =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return strongPasswordRegExp.test(password);
+      }
+
+      function showMessageToast(message) {
+        const toastContainer = document.getElementById("toast-container");
+        const toastMessageElem = document.getElementById("toast-message");
+
+        toastContainer.style.display = "block";
+        toastMessageElem.innerHTML = message;
+
+        setTimeout(() => {
+          toastContainer.style.display = "none";
+        }, 2000);
+      }
+
+      function handleResetPassword(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        if (!form.passwordCurrent.value) {
+          showMessageToast("Current password needed.");
+          return;
+        } else if (!form.passwordNew.value) {
+          showMessageToast("New password needed.");
+          return;
+        } else if (!form.passwordNewConfirm.value) {
+          showMessageToast("Confirm new password needed.");
+          return;
+        }
+
+        if (form.passwordNew.value !== form.passwordNewConfirm.value) {
+          showMessageToast("Password mismatched.");
+          return;
+        }
+
+        const formData = {
+          email: form.email.value,
+          passwordCurrent: form.passwordCurrent.value,
+          passwordNew: form.passwordNew.value,
+        };
+
+        const jsonData = JSON.stringify(formData);
+
+        fetch("/reset-password", {
+          method: "POST",
+          body: jsonData,
+          mode: "cors",
+          cache: "no-cache",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("System could not process request.");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            form.reset();
+
+            if (data?.message) {
+              showMessageToast(data?.message);
+            } else {
+              showMessageToast("System could not process request.");
+            }
+          })
+          .catch((error) => {
+            if (error?.message) {
+              showMessageToast(error?.message);
+            } else {
+              showMessageToast("System could not process request.");
+            }
+          });
+      }
+    </script>
+    <script>
+      const inputFileElem = document.getElementById("fileInput");
+      inputFileElem.addEventListener(
+        "change",
+        function () {
+          const images = this.files;
+
+          handleImages(images);
+        },
+        false
+      );
+
+      function handleFile() {
+        inputFileElem.click();
+      }
+
+      function handleImages(images) {
+        for (const image of images) {
+          if (!image.type.startsWith("image/")) {
+            continue;
+          }
+
+          const preview = document.getElementById("preview");
+
+          const img = document.createElement("img");
+          img.classList.add("obj");
+          img.file = image;
+          preview.innerHTML = "";
+          preview.appendChild(img);
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(image);
+        }
+      }
+    </script>
+    <script>
+      function showResponseMessage(message) {
+        const toastContainer = document.getElementById("toast-container");
+        const toastMessageElem = document.getElementById("toast-message");
+
+        toastContainer.style.display = "block";
+        toastMessageElem.innerHTML = message;
+
+        setTimeout(() => {
+          toastContainer.style.display = "none";
+        }, 5000);
+      }
+
+      function handleSaveChange(event) {
+        event.preventDefault();
+        const form = event.target;
+
+        const name = form?.name?.value;
+        const email = form?.email?.value;
+        const profilePictureFile = form?.file?.files?.item(0);
+
+        const formData = new FormData();
+
+        formData.append("data", JSON.stringify({ name: name, email: email }));
+
+        if (profilePictureFile) {
+          formData.append("user", profilePictureFile);
+        }
+
+        fetch("/change-user-info", { method: "PATCH", body: formData })
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+            showResponseMessage(data?.message);
+          })
+          .catch((error) => {
+            console.log(error);
+            showResponseMessage("Something went wrong while updating.");
+          });
+      }
+    </script>
+    <script>
+      document
+        .getElementById("get-verified-link")
+        .addEventListener("click", function () {
+          fetch("/get-verified", { method: "POST" })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Request failed due to server error.");
+              }
+              return res.json();
+            })
+            .then((data) => {
+              const toastContainer = document.getElementById("toast-container");
+              const toastMessageElem = document.getElementById("toast-message");
+
+              toastContainer.style.display = "block";
+              toastMessageElem.innerHTML = data?.message;
+
+              setTimeout(() => {
+                toastContainer.style.display = "none";
+              }, 3000);
+
+              setTimeout(() => {
+                showLoading(false);
+
+                if (data?.status) {
+                  window.location.href = "/login";
+                }
+              }, 3000);
+            });
+        });
+    </script>
+  </body>
+</html>
