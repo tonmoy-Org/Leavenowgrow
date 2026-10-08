@@ -4664,9 +4664,30 @@ app.get("/api/status-data", async (req, res) => {
       Object.keys(modelErrors).forEach(key => modelErrors[key] = true);
     }
 
+    let azureAuthError = null;
+    if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
+      try {
+        const { ConfidentialClientApplication } = require("@azure/msal-node");
+        const cca = new ConfidentialClientApplication({
+          auth: {
+            clientId: process.env.CLIENT_ID,
+            authority: `https://login.microsoftonline.com/${process.env.TENANT_ID}`,
+            clientSecret: process.env.CLIENT_SECRET,
+          },
+        });
+        await cca.acquireTokenByClientCredential({
+          scopes: ["https://outlook.office365.com/.default"],
+        });
+      } catch (azureErr) {
+        azureAuthError = azureErr.errorMessage || azureErr.message;
+      }
+    } else {
+      azureAuthError = "Missing Azure credentials in .env";
+    }
+
     const totalEvaluations = dbStats.selfEvaluations + dbStats.managerEvaluations;
     const totalRecords = dbStats.formData + totalEvaluations + dbStats.goalsWorksheets + dbStats.users;
-    const hasAnyError = !dbConnected || dbPingError || Object.values(modelErrors).some(err => err === true);
+    const hasAnyError = !dbConnected || dbPingError || Object.values(modelErrors).some(err => err === true) || !!azureAuthError;
 
     const automationLogs = [
       {
@@ -4791,13 +4812,13 @@ app.get("/api/status-data", async (req, res) => {
       },
       {
         name: "Email & MS365 Notification Transporter",
-        description: `Nodemailer OAuth2 MS365 & Gmail link dispatcher`,
+        description: `Nodemailer OAuth2 MS365 & Azure AD Authentication`,
         totalRuns: Math.max(1, dbStats.users),
-        successRuns: Math.max(1, dbStats.users),
-        timeAgo: process.env.USER_EMAIL ? "Transporter Ready" : "Missing User Email Env",
-        status: process.env.USER_EMAIL ? "success" : "error",
+        successRuns: !azureAuthError ? Math.max(1, dbStats.users) : 0,
+        timeAgo: !azureAuthError ? "Token Valid & Operational" : "Authentication Failed",
+        status: !azureAuthError ? "success" : "error",
         type: "Email Service",
-        metric: process.env.USER_EMAIL ? "Nodemailer / MS365 Configured" : "Env Config Required"
+        metric: !azureAuthError ? "Azure AD Token Operational" : (azureAuthError.includes("7000222") ? "Client Secret Expired (AADSTS7000222)" : "Azure Auth Error")
       },
       {
         name: "Multer Attachment File Storage Engine",
@@ -4808,6 +4829,16 @@ app.get("/api/status-data", async (req, res) => {
         status: "success",
         type: "File Utility",
         metric: "Multer Storage Operational"
+      },
+      {
+        name: "Environment Variables & API Credentials Audit",
+        description: `Validation of critical system secrets, database URIs & OAuth credentials`,
+        totalRuns: 7,
+        successRuns: (process.env.MONGODB_URI && process.env.SECRET_KEY && process.env.JWT_SECRET && process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.USER_EMAIL) ? 7 : 0,
+        timeAgo: (process.env.MONGODB_URI && process.env.SECRET_KEY && process.env.JWT_SECRET && process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.USER_EMAIL) ? "All Keys Present" : "Missing Required Keys",
+        status: (process.env.MONGODB_URI && process.env.SECRET_KEY && process.env.JWT_SECRET && process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.USER_EMAIL) ? "success" : "error",
+        type: "Config Audit",
+        metric: (process.env.MONGODB_URI && process.env.SECRET_KEY && process.env.JWT_SECRET && process.env.TENANT_ID && process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.USER_EMAIL) ? "Environment Verified" : "Env Keys Incomplete"
       }
     ];
 
